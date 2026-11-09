@@ -372,7 +372,7 @@ function Utility:Element(RightScroll, ElementFrame, sizeY, scope)
         ThemeID = {BackgroundColor3 = Utility:T(scope, "Background", "ElementColor")},
     }, {
         Utility:GlassStroke(),
-        VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 8)}),
+        VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 10)}),
     })
     local inner = VexUI:Create("Frame", {
         Name = "TextColumn", Parent = card, BackgroundTransparency = 1,
@@ -2913,7 +2913,7 @@ function UI:_BuildWindow(Config, startup)
                     ThemeID = StrokeThemeID
                 }),
                 VexUI:Create("UICorner", {
-                    CornerRadius = UDim.new(0, 8),
+                    CornerRadius = UDim.new(0, 10),
                 }),
                 VexUI:Create("UIPadding", {
                     PaddingTop = UDim.new(0,10),
@@ -3118,10 +3118,10 @@ function UI:_BuildWindow(Config, startup)
             end
 
             ButtonTRG.MouseEnter:Connect(function() 
-                Utility:TweenObject(ButtonFrame, {BackgroundTransparency = 0.6}, 0.1) 
+                Utility:TweenObject(ButtonFrame, {BackgroundTransparency = 0.08}, 0.1) 
             end)
             ButtonTRG.MouseLeave:Connect(function()
-                Utility:TweenObject(ButtonFrame, {BackgroundTransparency = 0.5}, 0.1) 
+                Utility:TweenObject(ButtonFrame, {BackgroundTransparency = 0}, 0.1) 
             end)
             ButtonTRG.MouseButton1Click:Connect(function()
                 if Button.Locked then return end
@@ -3129,7 +3129,7 @@ function UI:_BuildWindow(Config, startup)
                 NotifyAction(Button.Title, "Activated")
                 Utility:TweenObject(ButtonFrame, {BackgroundTransparency = 0}, 0.1)
                 wait(0.1)
-                Utility:TweenObject(ButtonFrame, {BackgroundTransparency = 0.5}, 0.1)
+                Utility:TweenObject(ButtonFrame, {BackgroundTransparency = 0}, 0.1)
             end)
 
             Utility:Search(Window, {Title = Button.Title, Desc = Button.Desc, Icon = "arrow-up-right",Type = "Button", TabTitle = Tab.Title, SelectFn = SelectTab, Frame = Beeee, RightScroll = RightScroll,})
@@ -3406,7 +3406,7 @@ function UI:_BuildWindow(Config, startup)
             local card = VexUI:Create("Frame", {
                 Name = "Card", Parent = row, Size = UDim2.new(1, 0, 1, 0), ZIndex = 15,
                 ClipsDescendants = false, ThemeID = {BackgroundColor3 = "Slider.Background|ElementColor"},
-            }, {VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 8)}), Utility:GlassStroke()})
+            }, {VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 10)}), Utility:GlassStroke()})
             local textColumn = VexUI:Create("Frame", {
                 Name = "TextColumn", Parent = card, Position = UDim2.new(0, 0, 0, 8),
                 Size = UDim2.new(1, -82, 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
