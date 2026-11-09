@@ -4626,9 +4626,8 @@ function UI:_BuildWindow(Config, startup)
         Main.Visible = false
         
         local isTouch = UserInputService.TouchEnabled
-        -- Reopen with Window.ToggleKey (default F); keep the floating AERO buttons hidden.
-        MobileBtn.Visible = false
-        MinzUI.Visible = false
+        MobileBtn.Visible = isTouch
+        MinzUI.Visible = not isTouch
 
     end    
 
