@@ -861,7 +861,7 @@ function UI:_BuildWindow(Config, startup)
         Name = Config.Name or "VexUI",
         Author = Config.Author or nil,
         Icon = Config.Icon or nil,
-        ToggleKey = Config.ToggleKey or Enum.KeyCode.F,
+        ToggleKey = Config.ToggleKey or Enum.KeyCode.RightShift,
         Transparent = Config.Transparent or false,
         Theme = Config.Theme or "Dark",
         Folder = Config.Folder,
@@ -878,8 +878,8 @@ function UI:_BuildWindow(Config, startup)
             0, math.clamp(Config.Size.X.Offset, 420, 1000),
             0, math.clamp(Config.Size.Y.Offset, 280, 740)
         ) or (UserInputService.TouchEnabled
-            and UDim2.new(0, 770, 0, 535)
-            or UDim2.new(0, 880, 0, 610)),
+            and UDim2.new(0, 790, 0, 550)
+            or UDim2.new(0, 900, 0, 630)),
         SideBarWidth = Config.SideBarWidth or 176,
         TransparencyNum = math.clamp(Config.TransparencyNum or (Config.Transparent and 0.1 or 0), 0, 1),
         User = (function()
@@ -2547,7 +2547,7 @@ function UI:_BuildWindow(Config, startup)
         Position = UDim2.new(0.5, 0, 1, -12),
         BorderColor3 = Color3.new(0, 0, 0),
         ClipsDescendants = true,
-        Size = UDim2.new(0, Window.SideBarWidth - 20, 0, 44),
+        Size = UDim2.new(0, Window.SideBarWidth - 20, 0, 48),
         BackgroundColor3 = Color3.fromRGB(24, 24, 24),
         ZIndex = 10,
         ThemeID = { BackgroundColor3 = "ElementColor" }
@@ -2559,7 +2559,7 @@ function UI:_BuildWindow(Config, startup)
             AnchorPoint = Vector2.new(0.075, 0.5),
             BackgroundTransparency = 0,
             Position = UDim2.new(0.075, 0, 0.5, 0),
-            Size = UDim2.new(0, 28, 0, 28),
+            Size = UDim2.new(0, 30, 0, 30),
             ZIndex = 11,
             Image = (function()
                 return game:GetService("Players"):GetUserThumbnailAsync(Window.User.Anonymous and 1 or game:GetService("Players").LocalPlayer.UserId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size150x150)
@@ -2601,8 +2601,8 @@ function UI:_BuildWindow(Config, startup)
         }
     }, {
         VexUI:Create("UIPadding", {
-            PaddingLeft = UDim.new(0,40),
-            PaddingBottom = UDim.new(0,15)
+            PaddingLeft = UDim.new(0,44),
+            PaddingBottom = UDim.new(0,18)
         })
     })
     local UserSub = VexUI:Create("TextLabel", {
@@ -2624,8 +2624,8 @@ function UI:_BuildWindow(Config, startup)
         }
     }, {
         VexUI:Create("UIPadding", {
-            PaddingLeft = UDim.new(0,40),
-            PaddingTop = UDim.new(0,15)
+            PaddingLeft = UDim.new(0,44),
+            PaddingTop = UDim.new(0,18)
         })
     })
 
@@ -4626,8 +4626,9 @@ function UI:_BuildWindow(Config, startup)
         Main.Visible = false
         
         local isTouch = UserInputService.TouchEnabled
-        MobileBtn.Visible = isTouch
-        MinzUI.Visible = not isTouch
+        -- Reopen with Window.ToggleKey (default F); keep the floating AERO buttons hidden.
+        MobileBtn.Visible = false
+        MinzUI.Visible = false
 
     end    
 
