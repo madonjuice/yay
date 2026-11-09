@@ -878,11 +878,15 @@ function UI:_BuildWindow(Config, startup)
             0, math.clamp(Config.Size.X.Offset, 420, 1000),
             0, math.clamp(Config.Size.Y.Offset, 280, 740)
         ) or (UserInputService.TouchEnabled
-            and UDim2.new(0, 740, 0, 510)
-            or UDim2.new(0, 840, 0, 580)),
+            and UDim2.new(0, 770, 0, 535)
+            or UDim2.new(0, 880, 0, 610)),
         SideBarWidth = Config.SideBarWidth or 176,
         TransparencyNum = math.clamp(Config.TransparencyNum or (Config.Transparent and 0.1 or 0), 0, 1),
-        User = Config.User or {},
+        User = (function()
+            local user = Config.User or {}
+            if user.Enabled == nil then user.Enabled = true end
+            return user
+        end)(),
         Tabs = {},
         AllElements = {},
         CurrentTab = {},
@@ -2543,21 +2547,19 @@ function UI:_BuildWindow(Config, startup)
         Position = UDim2.new(0.5, 0, 1, -12),
         BorderColor3 = Color3.new(0, 0, 0),
         ClipsDescendants = true,
-        Size = UDim2.new(0, Window.SideBarWidth - 20, 0, 40),
-        BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+        Size = UDim2.new(0, Window.SideBarWidth - 20, 0, 44),
+        BackgroundColor3 = Color3.fromRGB(24, 24, 24),
         ZIndex = 10,
-        ThemeID = {
-            BackgroundColor3 = "Background"
-        }
+        ThemeID = { BackgroundColor3 = "ElementColor" }
     },{
         VexUI:Create("UICorner", {
             CornerRadius = UDim.new(0, 16),
         }),
         VexUI:Create("ImageLabel", {
             AnchorPoint = Vector2.new(0.075, 0.5),
-            BackgroundTransparency = 0.7,
+            BackgroundTransparency = 0,
             Position = UDim2.new(0.075, 0, 0.5, 0),
-            Size = UDim2.new(0, 25, 0, 25),
+            Size = UDim2.new(0, 28, 0, 28),
             ZIndex = 11,
             Image = (function()
                 return game:GetService("Players"):GetUserThumbnailAsync(Window.User.Anonymous and 1 or game:GetService("Players").LocalPlayer.UserId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size150x150)
@@ -2589,7 +2591,7 @@ function UI:_BuildWindow(Config, startup)
         FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
         Text = Window.User.Anonymous and "Anonymous" or game:GetService("Players").LocalPlayer.DisplayName,
         TextTransparency = 0,
-        TextSize = 13,
+        TextSize = 12,
         ZIndex = 11,
         TextColor3 = Color3.fromRGB(255, 255, 255),
         TextXAlignment = Enum.TextXAlignment.Left,
@@ -2612,7 +2614,7 @@ function UI:_BuildWindow(Config, startup)
         FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
         Text = Window.User.Anonymous and "@Anonymous" or "@"..game:GetService("Players").LocalPlayer.Name,
         TextTransparency = 0.35,
-        TextSize = 13,
+        TextSize = 10,
         ZIndex = 11,
         TextColor3 = Color3.fromRGB(255, 255, 255),
         TextXAlignment = Enum.TextXAlignment.Left,
