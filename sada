@@ -4431,48 +4431,90 @@ function UI:_BuildWindow(Config, startup)
             Config = Config or {}
             local Padding = Config.Padding or 5
 
-            local GroupFrame = VexUI:Create("Frame", {
-                Parent = RightScroll,
-                BackgroundTransparency = 1,
-                AutomaticSize = "Y",
-                Size = UDim2.new(0, ElementFrame.Size.X.Offset - 24, 0, 0),
-                ZIndex = 15,
-            }, {
-                VexUI:Create("UIListLayout", {
-                    FillDirection = Enum.FillDirection.Horizontal,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                    VerticalAlignment = Enum.VerticalAlignment.Top,
-                    SortOrder = Enum.SortOrder.LayoutOrder,
-                    Padding = UDim.new(0, Padding),
+            local titled = type(Config.Title) == "string" and Config.Title ~= ""
+            local GroupFrame, GroupContent
+            if titled then
+                GroupFrame = VexUI:Create("Frame", {
+                    Name = Config.Title .. "Group", Parent = RightScroll,
+                    AutomaticSize = Enum.AutomaticSize.Y,
+                    Size = UDim2.new(1, -12, 0, 0), BorderSizePixel = 0, ZIndex = 15,
+                    ThemeID = {BackgroundColor3 = "Background"},
+                }, {
+                    VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 10)}),
+                    VexUI:Create("UIStroke", {ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+                        Color = UI.Theme.Outline, Transparency = 0.45, Thickness = 1,
+                        ThemeID = {Color = "Outline"}}),
+                    VexUI:Create("UIPadding", {
+                        PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10),
+                        PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
+                    }),
+                    VexUI:Create("UIListLayout", {
+                        FillDirection = Enum.FillDirection.Vertical,
+                        SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 8),
+                    }),
                 })
-            })
+                VexUI:Create("TextLabel", {
+                    Name = "GroupTitle", Parent = GroupFrame,
+                    BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 22),
+                    FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
+                    Text = Config.Title, TextSize = Config.TextSize or 14,
+                    TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 16,
+                    ThemeID = {TextColor3 = "Text"},
+                })
+                GroupContent = VexUI:Create("Frame", {
+                    Name = "GroupContent", Parent = GroupFrame,
+                    BackgroundTransparency = 1, AutomaticSize = Enum.AutomaticSize.Y,
+                    Size = UDim2.new(1, 0, 0, 0), ZIndex = 16,
+                }, {Utility:ListLayout("V", 7)})
+            else
+                GroupFrame = VexUI:Create("Frame", {
+                    Parent = RightScroll, BackgroundTransparency = 1,
+                    AutomaticSize = "Y", Size = UDim2.new(0, ElementFrame.Size.X.Offset - 24, 0, 0),
+                    ZIndex = 15,
+                }, {
+                    VexUI:Create("UIListLayout", {
+                        FillDirection = Enum.FillDirection.Horizontal,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                        VerticalAlignment = Enum.VerticalAlignment.Top,
+                        SortOrder = Enum.SortOrder.LayoutOrder,
+                        Padding = UDim.new(0, Padding),
+                    })
+                })
+            end
 
-            local CellScale, CellOffset
+            local Group = {}
+            function Group:SetTitle(title)
+                local label = GroupFrame:FindFirstChild("GroupTitle")
+                if label then label.Text = title end
+            end
+            function Group:Close() GroupFrame:Destroy() end
 
             local function Size()
                 local count = 0
                 for _, child in ipairs(GroupFrame:GetChildren()) do
-                    if child:IsA("Frame") then
-                        count += 1
-                    end
+                    if child:IsA("Frame") then count += 1 end
                 end
-                CellScale = 1 / math.max(1, count)
-                CellOffset = -(Padding * (math.max(1, count) - 1) / math.max(1, count))
+                local cellScale = 1 / math.max(1, count)
+                local cellOffset = -(Padding * (math.max(1, count) - 1) / math.max(1, count))
                 for _, child in ipairs(GroupFrame:GetChildren()) do
                     if child:IsA("Frame") then
-                        child.Size = UDim2.new(CellScale, CellOffset, 0, child.Size.Y.Offset)
+                        child.Size = UDim2.new(cellScale, cellOffset, 0, child.Size.Y.Offset)
                     end
                 end
             end
-
-            local Group = {}
 
             setmetatable(Group, {
                 __index = function(_, methodName)
                     return function(_, ItemConfig)
                         local Element = Tab[methodName](Tab, ItemConfig)
-                        Window.SearchIndex[#Window.SearchIndex].Frame.Parent = GroupFrame
-                        Size()
+                        local controlFrame = Window.SearchIndex[#Window.SearchIndex].Frame
+                        if titled then
+                            controlFrame.Parent = GroupContent
+                            controlFrame.Size = UDim2.new(1, 0, 0, controlFrame.Size.Y.Offset)
+                        else
+                            controlFrame.Parent = GroupFrame
+                            Size()
+                        end
                         return Element
                     end
                 end
