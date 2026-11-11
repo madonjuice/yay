@@ -4442,7 +4442,7 @@ function UI:_BuildWindow(Config, startup)
                 }, {
                     VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 10)}),
                     VexUI:Create("UIStroke", {ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-                        Color = UI.Theme.Outline, Transparency = 0.45, Thickness = 1,
+                        Transparency = 0.45, Thickness = 1,
                         ThemeID = {Color = "Outline"}}),
                     VexUI:Create("UIPadding", {
                         PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10),
