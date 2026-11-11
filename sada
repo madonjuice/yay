@@ -4433,6 +4433,7 @@ function UI:_BuildWindow(Config, startup)
 
             local titled = type(Config.Title) == "string" and Config.Title ~= ""
             local GroupFrame, GroupContent
+            local GroupCollapsed = Config.Collapsed == true
             if titled then
                 GroupFrame = VexUI:Create("Frame", {
                     Name = Config.Title .. "Group", Parent = RightScroll,
@@ -4442,7 +4443,7 @@ function UI:_BuildWindow(Config, startup)
                 }, {
                     VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 10)}),
                     VexUI:Create("UIStroke", {ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-                        Transparency = 0.45, Thickness = 1,
+                        Color = UI.Theme.Outline, Transparency = 0.45, Thickness = 1,
                         ThemeID = {Color = "Outline"}}),
                     VexUI:Create("UIPadding", {
                         PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10),
@@ -4453,19 +4454,45 @@ function UI:_BuildWindow(Config, startup)
                         SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 8),
                     }),
                 })
-                VexUI:Create("TextLabel", {
-                    Name = "GroupTitle", Parent = GroupFrame,
+                local GroupHeader = VexUI:Create("Frame", {
+                    Name = "GroupHeader", Parent = GroupFrame,
+                    BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 22),
+                    ZIndex = 17,
+                })
+                local GroupTitle = VexUI:Create("TextLabel", {
+                    Name = "GroupTitle", Parent = GroupHeader,
                     BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 22),
                     FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
                     Text = Config.Title, TextSize = Config.TextSize or 14,
                     TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 16,
                     ThemeID = {TextColor3 = "Text"},
                 })
+                local CollapseButton = VexUI:Create("TextButton", {
+                    Name = "CollapseButton", Parent = GroupHeader,
+                    BackgroundTransparency = 1, Text = "", AutoButtonColor = false,
+                    Position = UDim2.new(0, 0, 0, 0), Size = UDim2.new(1, 0, 0, 22),
+                    ZIndex = 18,
+                })
+                GroupTitle.ZIndex = 19
+                local CollapseIcon = VexUI:Create("TextLabel", {
+                    Name = "CollapseIcon", Parent = GroupHeader,
+                    BackgroundTransparency = 1, Position = UDim2.new(1, -20, 0, 0),
+                    Size = UDim2.new(0, 20, 0, 22), Text = "−", TextSize = 18,
+                    FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+                    ZIndex = 19, ThemeID = {TextColor3 = "Muted"},
+                })
                 GroupContent = VexUI:Create("Frame", {
                     Name = "GroupContent", Parent = GroupFrame,
                     BackgroundTransparency = 1, AutomaticSize = Enum.AutomaticSize.Y,
                     Size = UDim2.new(1, 0, 0, 0), ZIndex = 16,
                 }, {Utility:ListLayout("V", 7)})
+                GroupContent.Visible = not GroupCollapsed
+                CollapseIcon.Text = GroupCollapsed and "+" or "−"
+                CollapseButton.Activated:Connect(function()
+                    GroupCollapsed = not GroupCollapsed
+                    GroupContent.Visible = not GroupCollapsed
+                    CollapseIcon.Text = GroupCollapsed and "+" or "−"
+                end)
             else
                 GroupFrame = VexUI:Create("Frame", {
                     Parent = RightScroll, BackgroundTransparency = 1,
@@ -4484,8 +4511,15 @@ function UI:_BuildWindow(Config, startup)
 
             local Group = {}
             function Group:SetTitle(title)
-                local label = GroupFrame:FindFirstChild("GroupTitle")
+                local label = GroupFrame:FindFirstChild("GroupTitle", true)
                 if label then label.Text = title end
+            end
+            function Group:SetCollapsed(value)
+                if not titled then return end
+                GroupCollapsed = value == true
+                GroupContent.Visible = not GroupCollapsed
+                local icon = GroupFrame:FindFirstChild("CollapseIcon", true)
+                if icon then icon.Text = GroupCollapsed and "+" or "−" end
             end
             function Group:Close() GroupFrame:Destroy() end
 
