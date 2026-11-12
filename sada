@@ -131,7 +131,7 @@ Palette("Midnight", "0d0e11", "191b20", "e6e7eb", "a6acbc")
 Palette("Mocha", "1e1e2e", "313244", "cdd6f4", "cba6f7")
 Palette("Crimson", "100d0f", "21171b", "f3e6e9", "f05264")
 Palette("Afterglow", "100d12", "211722", "f4e7f0", "f080bf")
-Palette("Halloween", "171311", "29201b", "f2e7dc", "ff943d")
+Palette("Christmas", "0c1712", "1b2a21", "eff7f1", "d95763")
 
 -- Semantic colors keep custom themes compatible with the component palette.
 for name, theme in pairs(VexUI.Themes) do
@@ -779,41 +779,53 @@ function VexUI:StartupLoader(config)
     end
     local screen = make("ScreenGui", {Name = "AERO_Startup", ResetOnSpawn = false,
         IgnoreGuiInset = true, DisplayOrder = 10000}, UIScreen.Parent)
+    make("Frame", {Name = "Backdrop", Size = UDim2.fromScale(1,1), BackgroundColor3 = theme.Background,
+        BackgroundTransparency = 0.22, BorderSizePixel = 0, ZIndex = 1}, screen)
     local card = make("CanvasGroup", {AnchorPoint = Vector2.new(0.5,0.5), Position = UDim2.fromScale(0.5,0.5),
-        Size = UDim2.new(1,-40,0,256), BackgroundColor3 = theme.Background,
-        BackgroundTransparency = 0, BorderSizePixel = 0}, screen)
-    make("UISizeConstraint", {MaxSize = Vector2.new(380,256)}, card)
-    make("UICorner", {CornerRadius = UDim.new(0,16)}, card)
-    make("UIStroke", {Color = theme.Outline, Transparency = 0.35, Thickness = 1}, card)
-    local function label(text, y, height, size, color)
+        Size = UDim2.new(1,-40,0,274), BackgroundColor3 = theme.ElementColor,
+        BackgroundTransparency = 0, BorderSizePixel = 0, ZIndex = 2}, screen)
+    make("UISizeConstraint", {MaxSize = Vector2.new(420,274)}, card)
+    make("UICorner", {CornerRadius = UDim.new(0,18)}, card)
+    make("UIStroke", {Color = theme.Outline, Transparency = 0.2, Thickness = 1}, card)
+    make("UIGradient", {Rotation = 110, Color = ColorSequence.new(theme.ElementColor,theme.Background),
+        Transparency = NumberSequence.new(0.08,0.18)}, card)
+    local function label(text, y, height, size, color, font, align)
         return make("TextLabel", {Text = text, Position = UDim2.new(0,22,0,y), Size = UDim2.new(1,-44,0,height),
-            BackgroundTransparency = 1, Font = Enum.Font.GothamMedium, TextSize = size,
-            TextColor3 = color, TextTruncate = Enum.TextTruncate.AtEnd}, card)
+            BackgroundTransparency = 1, Font = font or Enum.Font.GothamMedium, TextSize = size,
+            TextColor3 = color, TextTruncate = Enum.TextTruncate.AtEnd,
+            TextXAlignment = align or Enum.TextXAlignment.Center, ZIndex = 4}, card)
     end
+    label("STARTUP SEQUENCE",16,16,9,theme.Accent,Enum.Font.GothamBold)
     local logo = make("ImageLabel", {
         Name = "AEROLogo", Image = "rbxassetid://129041708314604",
-        AnchorPoint = Vector2.new(0.5,0), Position = UDim2.new(0.5,0,0,18),
-        Size = UDim2.fromOffset(64,64), BackgroundTransparency = 1,
-        ScaleType = Enum.ScaleType.Fit, ImageColor3 = Color3.new(1,1,1),
+        AnchorPoint = Vector2.new(0.5,0), Position = UDim2.new(0.5,0,0,37),
+        Size = UDim2.fromOffset(54,54), BackgroundTransparency = 1,
+        ScaleType = Enum.ScaleType.Fit, ImageColor3 = Color3.new(1,1,1), ZIndex = 4,
     }, card)
-    label(config.Name or "AERO",84,28,15,theme.Text)
-    make("Frame", {AnchorPoint = Vector2.new(0.5,0), Position = UDim2.new(0.5,0,0,122),
-        Size = UDim2.fromOffset(76,2), BackgroundColor3 = theme.Accent, BorderSizePixel = 0}, card)
-    local status = label("Starting",140,24,12,theme.Text)
-    local detail = label("Preparing your interface",202,18,10,theme.Text)
-    detail.TextTransparency = 0.45
-    local track = make("Frame", {Position = UDim2.new(0,24,0,182), Size = UDim2.new(1,-48,0,4),
-        BackgroundColor3 = theme.Outline, BackgroundTransparency = 0.4, BorderSizePixel = 0}, card)
+    label(config.Name or "AERO",96,28,18,theme.Text,Enum.Font.GothamBold)
+    local status = label("Starting",132,22,12,theme.Accent,Enum.Font.GothamSemibold)
+    local detail = label("Preparing your interface",157,34,10,theme.Muted or theme.Text)
+    detail.TextTransparency = 0.12
+    make("Frame", {AnchorPoint = Vector2.new(0.5,0), Position = UDim2.new(0.5,0,0,198),
+        Size = UDim2.fromOffset(48,2), BackgroundColor3 = theme.Accent, BorderSizePixel = 0, ZIndex = 4}, card)
+    local track = make("Frame", {Position = UDim2.new(0,24,0,218), Size = UDim2.new(1,-48,0,6),
+        BackgroundColor3 = theme.Outline, BackgroundTransparency = 0.25, BorderSizePixel = 0, ZIndex = 4}, card)
     make("UICorner", {CornerRadius = UDim.new(1,0)}, track)
-    local fill = make("Frame", {Size = UDim2.fromScale(0,1), BackgroundColor3 = theme.Accent, BorderSizePixel = 0}, track)
+    local fill = make("Frame", {Size = UDim2.fromScale(0,1), BackgroundColor3 = theme.Accent, BorderSizePixel = 0, ZIndex = 5}, track)
     make("UICorner", {CornerRadius = UDim.new(1,0)}, fill)
+    make("UIGradient", {Color = ColorSequence.new(theme.Accent,theme.Accent:Lerp(theme.Text,0.28))}, fill)
+    local phase = label("INITIALIZING",236,18,9,theme.Muted or theme.Text,Enum.Font.GothamMedium,Enum.TextXAlignment.Left)
+    local percent = label("0%",236,18,10,theme.Muted or theme.Text,Enum.Font.GothamMedium,Enum.TextXAlignment.Right)
     local loader = {Screen = screen, Logo = logo, Closed = false}
     local progressTween
     function loader:Stage(text, fraction, description)
         if self.Closed then return end
+        local progress = math.clamp(tonumber(fraction) or 0,0,1)
         status.Text = text; detail.Text = description or ""
+        percent.Text = tostring(math.floor(progress * 100 + 0.5)) .. "%"
+        phase.Text = progress >= 1 and "COMPLETE" or (progress < 0.35 and "INITIALIZING" or progress < 0.7 and "BUILDING" or "FINALIZING")
         if progressTween then progressTween:Cancel() end
-        progressTween = TweenService:Create(fill,TweenInfo.new(0.15),{Size = UDim2.fromScale(fraction,1)})
+        progressTween = TweenService:Create(fill,TweenInfo.new(0.24,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Size = UDim2.fromScale(progress,1)})
         progressTween:Play()
     end
     function loader:Close()
@@ -835,7 +847,7 @@ function VexUI:StartupLoader(config)
         self:Stage("Couldn’t finish loading",0,tostring(message))
         local close = make("TextButton", {Text = "Close", Size = UDim2.fromOffset(54,26),
             Position = UDim2.new(1,-65,0,14), BackgroundTransparency = 1,
-            TextColor3 = theme.Text, Font = Enum.Font.Gotham, TextSize = 11}, card)
+            TextColor3 = theme.Text, Font = Enum.Font.Gotham, TextSize = 11, ZIndex = 4}, card)
         close.Activated:Connect(function() self:Close() end)
     end
     UIScreen.Destroying:Once(function() loader:Close() end)
@@ -899,6 +911,7 @@ function UI:_BuildWindow(Config, startup)
         if notificationsReady then UI:Notification({Title = title, Desc = detail, Duration = 3}) end
     end
 
+    local ApplySeasonalTheme
     function Window:SetTheme(themeName)
         local previousTheme = Window.Theme
         local theme = VexUI.Themes[themeName]
@@ -910,6 +923,7 @@ function UI:_BuildWindow(Config, startup)
         Window.Theme = themeName
         UI.Theme = theme
         VexUI:UpdateTheme(nil, true)
+        if ApplySeasonalTheme then ApplySeasonalTheme(themeName) end
         if previousTheme ~= themeName then NotifyAction("Theme changed", themeName) end
     end
 
@@ -4973,6 +4987,46 @@ function UI:_BuildWindow(Config, startup)
         Name = "FloatingPanels", Parent = UIScreen, Size = UDim2.new(1, 0, 1, 0),
         BackgroundTransparency = 1, Active = false, Visible = Main.Visible,
     })
+    local snowLayer, snowConnection
+    local snowflakes = {}
+    local function clearSnow()
+        if snowConnection then snowConnection:Disconnect(); snowConnection = nil end
+        if snowLayer then snowLayer:Destroy(); snowLayer = nil end
+        table.clear(snowflakes)
+    end
+    ApplySeasonalTheme = function(themeName)
+        if themeName ~= "Christmas" then clearSnow(); return end
+        if snowLayer and snowLayer.Parent then return end
+        snowLayer = VexUI:Create("Frame", {Name = "ChristmasSnow", Parent = Main,
+            Size = UDim2.fromScale(1,1), BackgroundTransparency = 1, BorderSizePixel = 0,
+            Active = false, ZIndex = 400})
+        for index = 1, 24 do
+            local size = math.random(9,16)
+            local flake = VexUI:Create("TextLabel", {Name = "Snowflake", Parent = snowLayer,
+                BackgroundTransparency = 1, Text = index % 4 == 0 and "✦" or "❄",
+                Font = Enum.Font.Gotham, TextSize = size, TextColor3 = Color3.fromRGB(238,247,255),
+                TextTransparency = math.random(10,45) / 100, TextStrokeTransparency = 1,
+                Size = UDim2.fromOffset(size + 4,size + 4), Active = false, Selectable = false, ZIndex = 400})
+            table.insert(snowflakes, {Object = flake, X = math.random(), Y = math.random(),
+                Speed = math.random(24,58), Drift = math.random(-10,10), Phase = math.random() * math.pi * 2})
+        end
+        snowConnection = game:GetService("RunService").RenderStepped:Connect(function(dt)
+            if not snowLayer or not snowLayer.Parent then clearSnow(); return end
+            local bounds = snowLayer.AbsoluteSize
+            if bounds.X <= 0 or bounds.Y <= 0 then return end
+            local now = os.clock()
+            for _, flake in ipairs(snowflakes) do
+                flake.Y += flake.Speed * dt / bounds.Y
+                flake.X += (flake.Drift + math.sin(now + flake.Phase) * 5) * dt / bounds.X
+                if flake.Y > 1.04 then flake.Y = -0.06; flake.X = math.random() end
+                if flake.X < -0.04 then flake.X = 1.04 elseif flake.X > 1.04 then flake.X = -0.04 end
+                flake.Object.Position = UDim2.fromScale(flake.X,flake.Y)
+                flake.Object.Rotation = (flake.Object.Rotation + dt * 14) % 360
+            end
+        end)
+    end
+    ApplySeasonalTheme(Window.Theme)
+    Main.Destroying:Once(clearSnow)
     local panelVisibility = Main:GetPropertyChangedSignal("Visible"):Connect(function()
         floatingPanels.Visible = Main.Visible
     end)
@@ -5045,7 +5099,7 @@ function UI:_BuildWindow(Config, startup)
         end)
         Fit()
     end
-    local choices = {"Dark", "Midnight", "Mocha", "Crimson", "Afterglow", "Halloween"}
+    local choices = {"Dark", "Midnight", "Mocha", "Crimson", "Afterglow", "Christmas"}
     local function OpenAppearance()
         if appearance then appearance:Destroy(); appearance = nil; return end
         appearance = VexUI:Create("TextButton", {
