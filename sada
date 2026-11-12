@@ -4149,6 +4149,28 @@ function UI:_BuildWindow(Config, startup)
                 end)
             end
 
+            local function FitInputLayout()
+                local narrow = InputElement.AbsoluteSize.X < 310
+                if narrow then
+                    Inner.Size = UDim2.new(1, -16, 0, 0)
+                    InputFrame.AnchorPoint = Vector2.new(0, 0)
+                    InputFrame.Size = UDim2.new(1, -16, 0, 25)
+                    local y = Inner.Position.Y.Offset + Inner.AbsoluteSize.Y + 8
+                    InputFrame.Position = UDim2.new(0, 8, 0, y)
+                    Beeee.Size = UDim2.new(Beeee.Size.X.Scale, Beeee.Size.X.Offset, 0, y + 33)
+                else
+                    Inner.Size = UDim2.new(1, -150, 0, 0)
+                    InputFrame.AnchorPoint = Vector2.new(1, 0.5)
+                    InputFrame.Position = UDim2.new(1, -10, 0.5, 0)
+                    InputFrame.Size = UDim2.new(0, 130, 0, 25)
+                end
+            end
+            InputElement:GetPropertyChangedSignal("AbsoluteSize"):Connect(FitInputLayout)
+            Inner:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+                if InputElement.AbsoluteSize.X < 310 then FitInputLayout() end
+            end)
+            task.defer(FitInputLayout)
+
             function Input:Lock()
                 Input.Locked = true
                 LockedElm(Beeee,true)
