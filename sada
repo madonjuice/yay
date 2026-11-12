@@ -4427,6 +4427,8 @@ function UI:_BuildWindow(Config, startup)
                 return game:GetService("Players"):GetUserThumbnailAsync(Value and 1 or game:GetService("Players").LocalPlayer.UserId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size150x150)
             end)()
         end
+        local GroupGrid, GroupGridLeft, GroupGridRight
+        local GroupGridCount = 0
         function Tab:Group(Config)
             Config = Config or {}
             local Padding = Config.Padding or 5
@@ -4435,10 +4437,29 @@ function UI:_BuildWindow(Config, startup)
             local GroupFrame, GroupContent
             local GroupCollapsed = Config.Collapsed == true
             if titled then
+                if not GroupGrid then
+                    GroupGrid = VexUI:Create("Frame", {
+                        Name = "FeatureCardGrid", Parent = RightScroll,
+                        BackgroundTransparency = 1, AutomaticSize = Enum.AutomaticSize.Y,
+                        Size = UDim2.new(1, -7, 0, 0), ZIndex = 15,
+                    })
+                    GroupGridLeft = VexUI:Create("Frame", {
+                        Name = "FeatureCardColumnLeft", Parent = GroupGrid,
+                        BackgroundTransparency = 1, AutomaticSize = Enum.AutomaticSize.Y,
+                        Position = UDim2.new(0, 0, 0, 0), Size = UDim2.new(0.5, -4, 0, 0),
+                    }, {Utility:ListLayout("V", 8)})
+                    GroupGridRight = VexUI:Create("Frame", {
+                        Name = "FeatureCardColumnRight", Parent = GroupGrid,
+                        BackgroundTransparency = 1, AutomaticSize = Enum.AutomaticSize.Y,
+                        Position = UDim2.new(0.5, 4, 0, 0), Size = UDim2.new(0.5, -4, 0, 0),
+                    }, {Utility:ListLayout("V", 8)})
+                end
+                GroupGridCount += 1
+                local groupColumn = GroupGridCount % 2 == 1 and GroupGridLeft or GroupGridRight
                 GroupFrame = VexUI:Create("Frame", {
-                    Name = Config.Title .. "Group", Parent = RightScroll,
+                    Name = Config.Title .. "Group", Parent = groupColumn,
                     AutomaticSize = Enum.AutomaticSize.Y,
-                    Size = UDim2.new(1, -12, 0, 0), BorderSizePixel = 0, ZIndex = 15,
+                    Size = UDim2.new(1, 0, 0, 0), BorderSizePixel = 0, ZIndex = 15,
                     ThemeID = {BackgroundColor3 = "Background"},
                 }, {
                     VexUI:Create("UICorner", {CornerRadius = UDim.new(0, 10)}),
