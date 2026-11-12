@@ -837,7 +837,8 @@ function VexUI:StartupLoader(config)
     function loader:Finish(detailText)
         if self.Closed then return end
         self:Stage("Ready",1,detailText or "Interface ready")
-        task.delay(0.15,function()
+        -- Keep the finish card visible for an extra beat so the transition feels deliberate.
+        task.delay(1.15,function()
             if self.Closed then return end
             TweenService:Create(card,TweenInfo.new(0.16),{GroupTransparency = 1}):Play()
             task.delay(0.16,function() self:Close() end)
@@ -4988,11 +4989,11 @@ function UI:_BuildWindow(Config, startup)
         BackgroundTransparency = 1, Active = false, Visible = Main.Visible,
     })
     local snowLayer, snowConnection
-    local snowflakes = {}
+    local seasonalParticles = {}
     local function clearSnow()
         if snowConnection then snowConnection:Disconnect(); snowConnection = nil end
         if snowLayer then snowLayer:Destroy(); snowLayer = nil end
-        table.clear(snowflakes)
+        table.clear(seasonalParticles)
     end
     ApplySeasonalTheme = function(themeName)
         if themeName ~= "Christmas" then clearSnow(); return end
@@ -5000,28 +5001,57 @@ function UI:_BuildWindow(Config, startup)
         snowLayer = VexUI:Create("Frame", {Name = "ChristmasSnow", Parent = Main,
             Size = UDim2.fromScale(1,1), BackgroundTransparency = 1, BorderSizePixel = 0,
             Active = false, ZIndex = 400})
+        local function block(parent, name, size, position, color, rounded)
+            local part = VexUI:Create("Frame", {Name=name, Parent=parent, Size=size, Position=position,
+                BackgroundColor3=color, BackgroundTransparency=0.08, BorderSizePixel=0,
+                Active=false, ZIndex=401})
+            if rounded then VexUI:Create("UICorner", {Parent=part, CornerRadius=UDim.new(1,0)}) end
+            return part
+        end
         for index = 1, 24 do
-            local size = math.random(9,16)
-            local flake = VexUI:Create("TextLabel", {Name = "Snowflake", Parent = snowLayer,
-                BackgroundTransparency = 1, Text = index % 4 == 0 and "✦" or "❄",
-                Font = Enum.Font.Gotham, TextSize = size, TextColor3 = Color3.fromRGB(238,247,255),
-                TextTransparency = math.random(10,45) / 100, TextStrokeTransparency = 1,
-                Size = UDim2.fromOffset(size + 4,size + 4), Active = false, Selectable = false, ZIndex = 400})
-            table.insert(snowflakes, {Object = flake, X = math.random(), Y = math.random(),
-                Speed = math.random(24,58), Drift = math.random(-10,10), Phase = math.random() * math.pi * 2})
+            local kind = index <= 14 and "snow" or (index % 2 == 0 and "tree" or "present")
+            local width = kind == "snow" and math.random(10,13) or math.random(15,21)
+            local height = kind == "snow" and width or (kind == "tree" and 24 or 16)
+            local item = VexUI:Create("Frame", {Name="ChristmasParticle", Parent=snowLayer,
+                AnchorPoint=Vector2.new(0.5,0.5), Size=UDim2.fromOffset(width,height),
+                BackgroundTransparency=1, BorderSizePixel=0, Active=false, ZIndex=400})
+            if kind == "snow" then
+                local ice = Color3.fromRGB(235,245,255)
+                local spokeA = block(item,"SnowSpokeA",UDim2.new(1,-1,0,1),UDim2.new(0,0,0.5,-0.5),ice,true)
+                local spokeB = block(item,"SnowSpokeB",UDim2.new(1,-1,0,1),UDim2.new(0,0,0.5,-0.5),ice,true)
+                local spokeC = block(item,"SnowSpokeC",UDim2.new(1,-1,0,1),UDim2.new(0,0,0.5,-0.5),ice,true)
+                spokeB.Rotation = 60
+                spokeC.Rotation = 120
+                block(item,"SnowCenter",UDim2.fromOffset(2,2),UDim2.new(0.5,-1,0.5,-1),ice,true)
+            elseif kind == "tree" then
+                local green = Color3.fromRGB(72,160,104)
+                block(item,"TreeTop",UDim2.new(0.34,0,0,6),UDim2.new(0.33,0,0,0),green,true)
+                block(item,"TreeMiddle",UDim2.new(0.68,0,0,7),UDim2.new(0.16,0,0,6),green,true)
+                block(item,"TreeBase",UDim2.new(1,0,0,7),UDim2.new(0,0,0,13),green,true)
+                block(item,"TreeTrunk",UDim2.new(0,4,0,5),UDim2.new(0.5,-2,1,-5),Color3.fromRGB(150,104,67),true)
+                block(item,"TreeTopper",UDim2.fromOffset(4,4),UDim2.new(0.5,-2,0,-1),Color3.fromRGB(255,211,105),true)
+            else
+                local gift = block(item,"Present",UDim2.new(1,-2,1,-3),UDim2.new(0,1,0,2),
+                    index % 4 == 1 and Color3.fromRGB(202,72,83) or Color3.fromRGB(66,145,101),true)
+                block(item,"RibbonV",UDim2.new(0,3,1,0),UDim2.new(0.5,-1,0,0),Color3.fromRGB(255,218,139))
+                block(item,"RibbonH",UDim2.new(1,0,0,3),UDim2.new(0,0,0.42,0),Color3.fromRGB(255,218,139))
+            end
+            table.insert(seasonalParticles, {Object=item, X=math.random(), Y=math.random(),
+                Speed=kind == "snow" and math.random(24,58) or math.random(18,34),
+                Drift=math.random(-10,10), Phase=math.random() * math.pi * 2})
         end
         snowConnection = game:GetService("RunService").RenderStepped:Connect(function(dt)
             if not snowLayer or not snowLayer.Parent then clearSnow(); return end
             local bounds = snowLayer.AbsoluteSize
             if bounds.X <= 0 or bounds.Y <= 0 then return end
             local now = os.clock()
-            for _, flake in ipairs(snowflakes) do
-                flake.Y += flake.Speed * dt / bounds.Y
-                flake.X += (flake.Drift + math.sin(now + flake.Phase) * 5) * dt / bounds.X
-                if flake.Y > 1.04 then flake.Y = -0.06; flake.X = math.random() end
-                if flake.X < -0.04 then flake.X = 1.04 elseif flake.X > 1.04 then flake.X = -0.04 end
-                flake.Object.Position = UDim2.fromScale(flake.X,flake.Y)
-                flake.Object.Rotation = (flake.Object.Rotation + dt * 14) % 360
+            for _, particle in ipairs(seasonalParticles) do
+                particle.Y += particle.Speed * dt / bounds.Y
+                particle.X += (particle.Drift + math.sin(now + particle.Phase) * 5) * dt / bounds.X
+                if particle.Y > 1.04 then particle.Y = -0.06; particle.X = math.random() end
+                if particle.X < -0.04 then particle.X = 1.04 elseif particle.X > 1.04 then particle.X = -0.04 end
+                particle.Object.Position = UDim2.fromScale(particle.X,particle.Y)
+                particle.Object.Rotation = (particle.Object.Rotation + dt * 14) % 360
             end
         end)
     end
