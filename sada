@@ -768,7 +768,7 @@ end
         Utility:TweenObject(Island, {Size = UDim2.new(0, Island.UIListLayout.AbsoluteContentSize.X + 5, 0, 35)}, 0, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     end)
 
--- The startup panel renders immediately; the brand image loads independently.
+-- A compact terminal-style startup panel; stage text reflects real UI startup work.
 function VexUI:StartupLoader(config)
     local theme = self.Themes[config.Theme or "Dark"] or self.Themes.Dark
     local function make(class, props, parent)
@@ -779,51 +779,77 @@ function VexUI:StartupLoader(config)
     end
     local screen = make("ScreenGui", {Name = "AERO_Startup", ResetOnSpawn = false,
         IgnoreGuiInset = true, DisplayOrder = 10000}, UIScreen.Parent)
-    make("Frame", {Name = "Backdrop", Size = UDim2.fromScale(1,1), BackgroundColor3 = theme.Background,
-        BackgroundTransparency = 0.22, BorderSizePixel = 0, ZIndex = 1}, screen)
+    make("Frame", {Name = "Backdrop", Size = UDim2.fromScale(1,1), BackgroundColor3 = Color3.fromRGB(4,6,9),
+        BackgroundTransparency = 0.24, BorderSizePixel = 0, ZIndex = 1}, screen)
     local card = make("CanvasGroup", {AnchorPoint = Vector2.new(0.5,0.5), Position = UDim2.fromScale(0.5,0.5),
-        Size = UDim2.new(1,-40,0,274), BackgroundColor3 = theme.ElementColor,
+        Size = UDim2.new(1,-32,0,318), BackgroundColor3 = Color3.fromRGB(10,12,15),
         BackgroundTransparency = 0, BorderSizePixel = 0, ZIndex = 2}, screen)
-    make("UISizeConstraint", {MaxSize = Vector2.new(420,274)}, card)
-    make("UICorner", {CornerRadius = UDim.new(0,18)}, card)
-    make("UIStroke", {Color = theme.Outline, Transparency = 0.2, Thickness = 1}, card)
-    make("UIGradient", {Rotation = 110, Color = ColorSequence.new(theme.ElementColor,theme.Background),
-        Transparency = NumberSequence.new(0.08,0.18)}, card)
-    local function label(text, y, height, size, color, font, align)
-        return make("TextLabel", {Text = text, Position = UDim2.new(0,22,0,y), Size = UDim2.new(1,-44,0,height),
-            BackgroundTransparency = 1, Font = font or Enum.Font.GothamMedium, TextSize = size,
-            TextColor3 = color, TextTruncate = Enum.TextTruncate.AtEnd,
-            TextXAlignment = align or Enum.TextXAlignment.Center, ZIndex = 4}, card)
+    make("UISizeConstraint", {MaxSize = Vector2.new(440,318)}, card)
+    make("UICorner", {CornerRadius = UDim.new(0,10)}, card)
+    make("UIStroke", {Color = theme.Accent, Transparency = 0.48, Thickness = 1}, card)
+    make("Frame", {Name="TopAccent", Size=UDim2.new(1,0,0,2), BackgroundColor3=theme.Accent,
+        BorderSizePixel=0, ZIndex=4}, card)
+    local function label(text, position, size, textSize, color, font, align)
+        return make("TextLabel", {Text=text, Position=position, Size=size,
+            BackgroundTransparency=1, Font=font or Enum.Font.Code, TextSize=textSize,
+            TextColor3=color, TextTruncate=Enum.TextTruncate.AtEnd,
+            TextXAlignment=align or Enum.TextXAlignment.Left, ZIndex=5}, card)
     end
-    label("STARTUP SEQUENCE",16,16,9,theme.Accent,Enum.Font.GothamBold)
-    local logo = make("ImageLabel", {
-        Name = "AEROLogo", Image = "rbxassetid://129041708314604",
-        AnchorPoint = Vector2.new(0.5,0), Position = UDim2.new(0.5,0,0,37),
-        Size = UDim2.fromOffset(54,54), BackgroundTransparency = 1,
-        ScaleType = Enum.ScaleType.Fit, ImageColor3 = Color3.new(1,1,1), ZIndex = 4,
-    }, card)
-    label(config.Name or "AERO",96,28,18,theme.Text,Enum.Font.GothamBold)
-    local status = label("Starting",132,22,12,theme.Accent,Enum.Font.GothamSemibold)
-    local detail = label("Preparing your interface",157,34,10,theme.Muted or theme.Text)
-    detail.TextTransparency = 0.12
-    make("Frame", {AnchorPoint = Vector2.new(0.5,0), Position = UDim2.new(0.5,0,0,198),
-        Size = UDim2.fromOffset(48,2), BackgroundColor3 = theme.Accent, BorderSizePixel = 0, ZIndex = 4}, card)
-    local track = make("Frame", {Position = UDim2.new(0,24,0,218), Size = UDim2.new(1,-48,0,6),
-        BackgroundColor3 = theme.Outline, BackgroundTransparency = 0.25, BorderSizePixel = 0, ZIndex = 4}, card)
-    make("UICorner", {CornerRadius = UDim.new(1,0)}, track)
-    local fill = make("Frame", {Size = UDim2.fromScale(0,1), BackgroundColor3 = theme.Accent, BorderSizePixel = 0, ZIndex = 5}, track)
-    make("UICorner", {CornerRadius = UDim.new(1,0)}, fill)
-    make("UIGradient", {Color = ColorSequence.new(theme.Accent,theme.Accent:Lerp(theme.Text,0.28))}, fill)
-    local phase = label("INITIALIZING",236,18,9,theme.Muted or theme.Text,Enum.Font.GothamMedium,Enum.TextXAlignment.Left)
-    local percent = label("0%",236,18,10,theme.Muted or theme.Text,Enum.Font.GothamMedium,Enum.TextXAlignment.Right)
-    local loader = {Screen = screen, Logo = logo, Closed = false}
+    label("A E R O  /  CLIENT STARTUP",UDim2.new(0,22,0,17),UDim2.new(1,-44,0,18),12,
+        theme.Accent,Enum.Font.Code)
+    local status = label("INITIALIZING",UDim2.new(0,22,0,45),UDim2.new(1,-44,0,30),22,
+        theme.Text,Enum.Font.GothamBold)
+    local detail = label("Starting client services",UDim2.new(0,22,0,78),UDim2.new(1,-44,0,18),11,
+        theme.Muted or theme.Text,Enum.Font.Code)
+    local stageRows = {}
+    local stageNames = {"Loading environment", "Loading UI", "Loading modules"}
+    local stageDetails = {"CLIENT SERVICES", "INTERFACE COMPONENTS", "FEATURE CONTROLS"}
+    for index, stageName in ipairs(stageNames) do
+        local y = 112 + (index - 1) * 40
+        local row = make("Frame", {Name="StartupStage"..index, Position=UDim2.new(0,20,0,y),
+            Size=UDim2.new(1,-40,0,34), BackgroundColor3=Color3.fromRGB(17,20,24),
+            BackgroundTransparency=0, BorderSizePixel=0, ZIndex=4}, card)
+        make("UICorner", {CornerRadius=UDim.new(0,5)}, row)
+        local marker = make("TextLabel", {Text="·", Position=UDim2.new(0,10,0,0),
+            Size=UDim2.fromOffset(20,34), BackgroundTransparency=1, Font=Enum.Font.Code,
+            TextSize=16, TextColor3=theme.Muted or theme.Text, ZIndex=5}, row)
+        local name = make("TextLabel", {Text=stageName, Position=UDim2.new(0,36,0,2),
+            Size=UDim2.new(1,-46,0,16), BackgroundTransparency=1, Font=Enum.Font.GothamSemibold,
+            TextSize=11, TextColor3=theme.Muted or theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
+            ZIndex=5}, row)
+        make("TextLabel", {Text=stageDetails[index], Position=UDim2.new(0,36,0,18),
+            Size=UDim2.new(1,-46,0,12), BackgroundTransparency=1, Font=Enum.Font.Code,
+            TextSize=8, TextColor3=theme.Muted or theme.Text, TextTransparency=0.2,
+            TextXAlignment=Enum.TextXAlignment.Left, ZIndex=5}, row)
+        stageRows[index] = {Marker=marker, Name=name, Row=row}
+    end
+    local track = make("Frame", {Position=UDim2.new(0,22,0,247), Size=UDim2.new(1,-44,0,4),
+        BackgroundColor3=theme.Outline, BackgroundTransparency=0.2, BorderSizePixel=0, ZIndex=4}, card)
+    local fill = make("Frame", {Size=UDim2.fromScale(0,1), BackgroundColor3=theme.Accent,
+        BorderSizePixel=0, ZIndex=5}, track)
+    local phase = label("BOOT STATUS",UDim2.new(0,22,0,260),UDim2.new(0.7,-22,0,18),9,
+        theme.Muted or theme.Text,Enum.Font.Code)
+    local percent = label("00%",UDim2.new(0.7,0,0,260),UDim2.new(0.3,-22,0,18),10,
+        theme.Accent,Enum.Font.Code,Enum.TextXAlignment.Right)
+    label("AERO  •  STARTUP",UDim2.new(0,22,1,-31),UDim2.new(1,-44,0,14),8,
+        theme.Muted or theme.Text,Enum.Font.Code)
+    local loader = {Screen = screen, Closed = false}
     local progressTween
     function loader:Stage(text, fraction, description)
         if self.Closed then return end
         local progress = math.clamp(tonumber(fraction) or 0,0,1)
         status.Text = text; detail.Text = description or ""
-        percent.Text = tostring(math.floor(progress * 100 + 0.5)) .. "%"
-        phase.Text = progress >= 1 and "COMPLETE" or (progress < 0.35 and "INITIALIZING" or progress < 0.7 and "BUILDING" or "FINALIZING")
+        percent.Text = string.format("%02d%%", math.floor(progress * 100 + 0.5))
+        phase.Text = progress >= 1 and "STARTUP COMPLETE" or "BOOT STATUS"
+        local activeStage = progress >= 0.8 and 4 or (progress < 0.3 and 1 or progress < 0.5 and 2 or 3)
+        for index, row in ipairs(stageRows) do
+            local complete = index < activeStage or progress >= 1
+            local active = index == activeStage and progress < 1
+            row.Marker.Text = complete and ">" or (active and ">" or "·")
+            row.Marker.TextColor3 = (complete or active) and theme.Accent or (theme.Muted or theme.Text)
+            row.Name.TextColor3 = (complete or active) and theme.Text or (theme.Muted or theme.Text)
+            row.Row.BackgroundColor3 = active and Color3.fromRGB(22,27,31) or Color3.fromRGB(17,20,24)
+        end
         if progressTween then progressTween:Cancel() end
         progressTween = TweenService:Create(fill,TweenInfo.new(0.24,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Size = UDim2.fromScale(progress,1)})
         progressTween:Play()
@@ -836,7 +862,7 @@ function VexUI:StartupLoader(config)
     end
     function loader:Finish(detailText)
         if self.Closed then return end
-        self:Stage("Ready",1,detailText or "Interface ready")
+        self:Stage("READY",1,detailText or "Startup complete")
         -- Keep the finish card visible for an extra beat so the transition feels deliberate.
         task.delay(1.15,function()
             if self.Closed then return end
@@ -846,9 +872,9 @@ function VexUI:StartupLoader(config)
     end
     function loader:Fail(message)
         self:Stage("Couldn’t finish loading",0,tostring(message))
-        local close = make("TextButton", {Text = "Close", Size = UDim2.fromOffset(54,26),
+        local close = make("TextButton", {Text = "CLOSE", Size = UDim2.fromOffset(54,26),
             Position = UDim2.new(1,-65,0,14), BackgroundTransparency = 1,
-            TextColor3 = theme.Text, Font = Enum.Font.Gotham, TextSize = 11, ZIndex = 4}, card)
+            TextColor3 = theme.Text, Font = Enum.Font.Code, TextSize = 10, ZIndex = 6}, card)
         close.Activated:Connect(function() self:Close() end)
     end
     UIScreen.Destroying:Once(function() loader:Close() end)
@@ -857,19 +883,19 @@ end
 function UI:_BuildWindow(Config, startup)
     Config = Config or {}
     local ok, failure = pcall(function()
-        if startup then startup:Stage("Checking game",0.1,"Waiting for Roblox") end
+        if startup then startup:Stage("Loading environment",0.1,"Checking client services") end
         if not game:IsLoaded() then game.Loaded:Wait() end
         local players = game:GetService("Players")
         while not players.LocalPlayer do players:GetPropertyChangedSignal("LocalPlayer"):Wait() end
         players.LocalPlayer:WaitForChild("PlayerGui")
-        if startup then startup:Stage("Loading icons",0.3,"Fetching the interface icon library") end
+        if startup then startup:Stage("Loading UI",0.3,"Preparing interface components") end
         LoadIcons()
     end)
     if not ok then
         if startup then startup:Fail("Icon library unavailable. Reload to retry.") end
         error(failure,0)
     end
-    if startup then startup:Stage("Building interface",0.5,"Applying theme and layout") end
+    if startup then startup:Stage("Loading modules",0.5,"Applying features and controls") end
     local Window = {
         Name = Config.Name or "VexUI",
         Author = Config.Author or nil,
@@ -5433,7 +5459,7 @@ function UI:_BuildWindow(Config, startup)
             NotifyAction("Discord", "Clipboard is unavailable on this device.")
             return
         end
-        local ok = pcall(copy, "https://discord.gg/4Vq35Jvd3C")
+        local ok = pcall(copy, "https://discord.gg/RgsvqDKgb9")
         NotifyAction("Discord", ok and "Discord invite copied to clipboard" or "Could not copy Discord invite.")
     end)
     DiscordButton.Position = UDim2.new(0,114,0,12)
@@ -5522,7 +5548,7 @@ function UI:_BuildWindow(Config, startup)
         -- Deferred work lets callers register their tabs after CreateWindow returns.
         task.defer(function()
             local complete, problem = pcall(function()
-                startup:Stage("Preparing controls",0.65,"Waiting for tab layout")
+                startup:Stage("Loading modules",0.65,"Finishing feature setup")
                 local stable, lastCount, began = 0, -1, os.clock()
                 while stable < 0.2 and os.clock() - began < 5 do
                     local dt = game:GetService("RunService").Heartbeat:Wait()
@@ -5531,7 +5557,7 @@ function UI:_BuildWindow(Config, startup)
                     stable = count == lastCount and stable + dt or 0
                     lastCount = count
                 end
-                startup:Stage("Loading UI assets",0.8,"Checking icons and fonts")
+                startup:Stage("Finalizing UI",0.8,"Loading icons and fonts")
                 local assets, seen = {}, {}
                 if startup.Logo then
                     table.insert(assets, startup.Logo.Image)
@@ -5565,7 +5591,7 @@ function UI:_BuildWindow(Config, startup)
                 if startup.Closed or not UIScreen.Parent then return end
                 UIScreen.Enabled = true
                 finishLoading()
-                startup:Finish((failed or not done) and "Some optional assets are still unavailable" or "Interface ready")
+                startup:Finish((failed or not done) and "Some optional assets are still unavailable" or "AERO startup complete")
             end)
             if not complete then
                 finishLoading()
