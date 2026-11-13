@@ -3360,7 +3360,7 @@ function UI:_BuildWindow(Config, startup)
             end
             local function FitRating()
                 local scale = math.max(0.05, Main.UIScale.Scale)
-                row.Size = UDim2.new(0, row.Size.X.Offset, 0,
+                row.Size = UDim2.new(row.Size.X.Scale, row.Size.X.Offset, 0,
                     math.max(84, inner.AbsoluteSize.Y / scale + 64))
                 stars.Size = UDim2.new(0, math.min(220, math.max(0, card.AbsoluteSize.X / scale - 20)), 0, 44)
                 for _, button in ipairs(buttons) do button.Size = UDim2.new(0.2, 0, 1, 0) end
@@ -5493,13 +5493,15 @@ function UI:_BuildWindow(Config, startup)
             fit()
             return overlay, card
         end
-        local count = (Window._PanelCount or 0) + 1
-        Window._PanelCount = count
-        local button = HeaderButton(options.Name or "CustomPanelButton", options.Icon or "message-circle", 0, function() api:Toggle() end)
-        button.Position = UDim2.new(0,114 + count * 32,0,12)
-        TitleLabel.Position = UDim2.new(0,148 + count * 32,0,8)
-        TitleLabel.Size = UDim2.new(1,-264 - count * 32,0,36)
-        api.Button = button
+        if options.HeaderButton ~= false then
+            local count = (Window._PanelCount or 0) + 1
+            Window._PanelCount = count
+            local button = HeaderButton(options.Name or "CustomPanelButton", options.Icon or "message-circle", 0, function() api:Toggle() end)
+            button.Position = UDim2.new(0,114 + count * 32,0,12)
+            TitleLabel.Position = UDim2.new(0,148 + count * 32,0,8)
+            TitleLabel.Size = UDim2.new(1,-264 - count * 32,0,36)
+            api.Button = button
+        end
         return api
     end
 
