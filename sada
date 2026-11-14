@@ -665,44 +665,42 @@ end
 local UserInputService = game:GetService("UserInputService")
 local HoldingSlider = false
 
-local function enableDragging(frame)
-    if game:GetService("UserInputService").TouchEnabled then return end
-    local dragging = false
-    local dragStart
-    local startPos
-
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1
-        or input.UserInputType == Enum.UserInputType.Touch then
-
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
+local function enableDragging(handle, target)
+    target = target or handle
+    local dragInput, dragStart, startPos
+    handle.Active = true
+    local function begin(input)
+        if dragInput then return end
+        if input.UserInputType ~= Enum.UserInputType.MouseButton1
+            and input.UserInputType ~= Enum.UserInputType.Touch then return end
+        dragInput = input
+        dragStart = Vector2.new(input.Position.X, input.Position.Y)
+        startPos = target.Position
+    end
+    handle.InputBegan:Connect(begin)
+    local movement = UserInputService.InputChanged:Connect(function(input)
+        if not dragInput or HoldingSlider then return end
+        local touch = dragInput.UserInputType == Enum.UserInputType.Touch
+        if (touch and input == dragInput)
+            or (not touch and input.UserInputType == Enum.UserInputType.MouseMovement) then
+            local delta = Vector2.new(input.Position.X, input.Position.Y) - dragStart
+            target.Position = UDim2.new(startPos.X.Scale,startPos.X.Offset + delta.X,
+                startPos.Y.Scale,startPos.Y.Offset + delta.Y)
         end
     end)
-
-    frame.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1
-        or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = false
+    local release = UserInputService.InputEnded:Connect(function(input)
+        if input == dragInput or (dragInput
+            and dragInput.UserInputType == Enum.UserInputType.MouseButton1
+            and input.UserInputType == Enum.UserInputType.MouseButton1) then
+            dragInput = nil
         end
     end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and HoldingSlider then dragging = false end
-        if dragging then
-            if input.UserInputType == Enum.UserInputType.MouseMovement
-            or input.UserInputType == Enum.UserInputType.Touch then
-
-                local delta = input.Position - dragStart
-                frame.Position = UDim2.new(
-                    startPos.X.Scale,
-                    startPos.X.Offset + delta.X,
-                    startPos.Y.Scale,
-                    startPos.Y.Offset + delta.Y
-                )
-            end
-        end
+    local focus = UserInputService.WindowFocusReleased:Connect(function() dragInput = nil end)
+    target.Destroying:Once(function()
+        dragInput = nil
+        movement:Disconnect()
+        release:Disconnect()
+        focus:Disconnect()
     end)
 end
 
@@ -1890,8 +1888,6 @@ function UI:_BuildWindow(Config, startup)
     assert(contentFrame, "AERO content frame was not created")
     local windowAlive = true
     Main.Destroying:Once(function() windowAlive = false end)
-    enableDragging(Main)
-
     Utility:GlassStroke("Outline", 1).Parent = Main
     local TitleLabel = VexUI:Create("TextLabel", {
         Name = "AeroTitle", Parent = Main,
@@ -1904,6 +1900,13 @@ function UI:_BuildWindow(Config, startup)
         TextTruncate = Enum.TextTruncate.AtEnd,
         ZIndex = 200, ThemeID = { TextColor3 = "Text" },
     })
+    local WindowDragHandle = VexUI:Create("TextButton", {
+        Name = "WindowDragHandle", Parent = Main,
+        Position = UDim2.new(0.35,0,0,0), Size = UDim2.new(0.3,0,0,Window.Topbar.Height),
+        Text = "", TextTransparency = 1, BackgroundTransparency = 1,
+        Active = true, AutoButtonColor = false, ZIndex = 201,
+    })
+    enableDragging(WindowDragHandle, Main)
     VexUI:Create("Frame", {
         Name = "HeaderRule", Parent = Main,
         Position = UDim2.new(0, 16, 0, Window.Topbar.Height + 7),
