@@ -966,6 +966,9 @@ function UI:_BuildWindow(Config, startup)
         SearchIndex = {},
     }
     Window.IslandOpen = true
+    function Window:GetIcon(name)
+        return GetIcon(name)
+    end
     local notificationsReady = false
     local function NotifyAction(title, detail)
         if notificationsReady then UI:Notification({Title = title, Desc = detail, Duration = 3}) end
@@ -3522,7 +3525,8 @@ function UI:_BuildWindow(Config, startup)
             local destroyed, editing = false, false
             local inputOwner, phase, startValue
             local scrollWasEnabled, movedConnection, endedConnection
-            local renderSize = 12
+            local renderSize = UserInputService.TouchEnabled
+                and math.ceil(18 / math.max(0.05, Main.UIScale.Scale)) or 12
             local function Paint()
                 local fraction = Ratio(value)
                 fill.Size = UDim2.new(fraction, 0, 1, 0)
@@ -3551,7 +3555,8 @@ function UI:_BuildWindow(Config, startup)
                     HoldingSlider = false
                     if RightScroll.Parent then RightScroll.ScrollingEnabled = scrollWasEnabled end
                 end
-                renderSize = 12
+                renderSize = UserInputService.TouchEnabled
+                    and math.ceil(18 / math.max(0.05, Main.UIScale.Scale)) or 12
                 if not destroyed then Paint() end
                 if notify and value ~= startValue then NotifyAction(Slider.Title, FormatValue(value)) end
             end
@@ -3563,13 +3568,13 @@ function UI:_BuildWindow(Config, startup)
                 local fraction = math.clamp((position.X - rail.AbsolutePosition.X) / math.max(1, rail.AbsoluteSize.X), 0, 1)
                 Set(Slider.Value.Min + fraction * (Slider.Value.Max - Slider.Value.Min), false)
             end
-            local function ClaimDrag()
+            local function ClaimDrag(touch)
                 if HoldingSlider or not CanUse() then StopDrag(false); return false end
                 phase = "dragging"
                 HoldingSlider = true
                 scrollWasEnabled = RightScroll.ScrollingEnabled
                 RightScroll.ScrollingEnabled = false
-                renderSize = 14
+                renderSize = touch and math.ceil(20 / math.max(0.05, Main.UIScale.Scale)) or 14
                 Paint()
                 return true
             end
@@ -3581,7 +3586,7 @@ function UI:_BuildWindow(Config, startup)
 
                 inputOwner = input
                 startValue = value
-                if not ClaimDrag() then return end
+                if not ClaimDrag(touch) then return end
                 MoveTo(input.Position)
 
                 movedConnection = UserInputService.InputChanged:Connect(function(changed)
@@ -3616,12 +3621,19 @@ function UI:_BuildWindow(Config, startup)
                 if destroyed then return end
                 local scale = math.max(0.05, Main.UIScale.Scale)
                 local touch = UserInputService.TouchEnabled
-                local targetHeight = touch and math.max(34, math.ceil(32 / scale)) or 28
+                -- Keep the interactive area about 46 screen pixels tall on phones and tablets.
+                local targetHeight = touch and math.max(46, math.ceil(46 / scale)) or 30
                 local headerHeight = math.max(24, math.ceil(textColumn.AbsoluteSize.Y / scale))
                 local height = math.max(Slider.SizeY, 8 + headerHeight + targetHeight + 4)
                 if row.Size.Y.Offset ~= height then row.Size = UDim2.new(row.Size.X.Scale, row.Size.X.Offset, 0, height) end
+                local railThickness = touch and math.max(5, math.ceil(5 / scale)) or 4
+                rail.Size = UDim2.new(1, -18, 0, railThickness)
                 hit.Position = UDim2.new(0, 8, 0, height - targetHeight - 4)
                 hit.Size = UDim2.new(1, -16, 0, targetHeight)
+                if not inputOwner then
+                    renderSize = touch and math.ceil(18 / scale) or 12
+                    Paint()
+                end
             end
             local connections = {
                 textColumn:GetPropertyChangedSignal("AbsoluteSize"):Connect(Layout),
