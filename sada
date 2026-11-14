@@ -147,8 +147,227 @@ end
 
 UI.Theme = VexUI.Themes["Dark"]
 
+VexUI.Language = "en"
+VexUI.Translations = {es = {
+    ["Home"]="Inicio", ["Leg Reach"]="Alcance de piernas", ["Arm Reach"]="Alcance de brazos",
+    ["Moss Stuff"]="Opciones Moss", ["Ball"]="Balón", ["Player"]="Jugador",
+    ["React"]="Reacción", ["Helpers"]="Ayudantes", ["FFlag"]="FFlag",
+    ["Skyes/Misc"]="Skyes / Varios", ["Gamepasses"]="Pases", ["Troll"]="Troleo",
+    ["Autofarm"]="Auto-granja", ["Settings"]="Configuración", ["Appearance"]="Apariencia",
+    ["Window"]="Ventana", ["User"]="Usuario", ["Other"]="Otros", ["Window Size"]="Tamaño de ventana",
+    ["Script feedback"]="Valorar el script", ["Live session"]="Sesión actual",
+    ["How is it working?"]="¿Qué te parece?", ["Choose a rating from 1 to 5."]="Elige una puntuación del 1 al 5.",
+    ["Send Rating"]="Enviar valoración", ["Sending Rating..."]="Enviando valoración...",
+    ["Rating Sent"]="Valoración enviada", ["Retry Send Rating"]="Reintentar envío",
+    ["Game"]="Juego", ["Players in server"]="Jugadores en el servidor", ["Ping"]="Ping",
+    ["FPS"]="FPS", ["Session time"]="Tiempo de sesión", ["Version"]="Versión",
+    ["Leg Reach Controls"]="Control de alcance de piernas", ["Leg Visuals & Timing"]="Visualización y tiempo de piernas",
+    ["Left Leg Reach"]="Alcance de pierna izquierda", ["Right Leg Reach"]="Alcance de pierna derecha",
+    ["Arm Reach Controls"]="Control de alcance de brazos", ["Arm Visualizers"]="Visualizadores de brazos",
+    ["Left Arm Reach"]="Alcance de brazo izquierdo", ["Right Arm Reach"]="Alcance de brazo derecho",
+    ["Head Reach"]="Alcance de cabeza", ["Head Reach (Moss)"]="Alcance de cabeza (Moss)",
+    ["Head Reach (Xeno Moss)"]="Alcance de cabeza (Xeno Moss)", ["Ball Prediction"]="Predicción del balón",
+    ["Ball Controls"]="Controles del balón", ["Ball Visuals"]="Visuales del balón",
+    ["Ball Speed & Force"]="Velocidad y fuerza del balón", ["Ball Reach"]="Alcance del balón",
+    ["Player Stats"]="Estadísticas del jugador", ["Level Changer"]="Cambiar nivel", ["Movement"]="Movimiento",
+    ["Clumsy"]="Clumsy", ["Ping Spoof"]="Cambiar ping", ["FFlag Notes"]="Notas de FFlag",
+    ["Target Time Delay"]="Retraso objetivo", ["Interpolation"]="Interpolación",
+    ["Physics Sender Rate"]="Frecuencia de envío de física", ["Map Options"]="Opciones del mapa",
+    ["Misc Options"]="Otras opciones", ["Skyboxes"]="Cielos", ["Kill Players"]="Derribar jugadores",
+    ["Ball Crasher"]="Rompebalón", ["Better Hit Reg"]="Mejor registro de impactos",
+    ["97rn React"]="Reacción 97rn", ["Leg react"]="Reacción de pierna",
+    ["Attacker React"]="Reacción de atacante", ["Defender React"]="Reacción de defensa",
+    ["GK React"]="Reacción de portero", ["Ball React"]="Reacción del balón",
+    ["Enable React"]="Activar reacción", ["Reset React"]="Restablecer reacción",
+    ["Dribble React"]="Reacción de regate", ["Spoof Ping (exact ms)"]="Fingir ping (ms exactos)",
+    ["Spoof 20-35 ms"]="Fingir 20-35 ms", ["Spoof 35-50 ms"]="Fingir 35-50 ms",
+    ["Spoof 50-75 ms"]="Fingir 50-75 ms", ["Spoof 75-100 ms"]="Fingir 75-100 ms",
+    ["Stop Ping Spoof"]="Detener cambio de ping", ["Leg Reach Enabled"]="Activar alcance de piernas",
+    ["Leg X Reach"]="Alcance X de piernas", ["Leg Y Reach"]="Alcance Y de piernas",
+    ["Leg Z Reach"]="Alcance Z de piernas", ["Leg Visualizer"]="Visualizador de piernas",
+    ["Reach Delay"]="Retraso del alcance", ["Arm Reach Enabled"]="Activar alcance de brazos",
+    ["Arm X Reach"]="Alcance X de brazos", ["Arm Y Reach"]="Alcance Y de brazos",
+    ["Arm Z Reach"]="Alcance Z de brazos", ["Arm Visualizer"]="Visualizador de brazos",
+    ["Show Left Arm Visualizer"]="Mostrar visualizador del brazo izquierdo",
+    ["Show Right Arm Visualizer"]="Mostrar visualizador del brazo derecho",
+    ["Leg Reach Enabled"]="Activar alcance de piernas", ["Leg X Reach"]="Alcance X de piernas",
+    ["Leg Y Reach"]="Alcance Y de piernas", ["Leg Z Reach"]="Alcance Z de piernas",
+    ["Prediction Update Delay"]="Retraso de actualización de predicción",
+    ["Prediction Duration"]="Duración de predicción", ["Ball Prediction"]="Predicción del balón",
+    ["Ball Collision"]="Colisión del balón", ["Ball Size"]="Tamaño del balón",
+    ["Default Ball Size"]="Tamaño predeterminado del balón", ["Change Ball Shape"]="Cambiar forma del balón",
+    ["Tp To Ball"]="Teletransportar al balón", ["Tp To Ball Key"]="Tecla para ir al balón",
+    ["Force Ball Speed Key"]="Tecla de velocidad del balón", ["Avatar Stealer"]="Copiar avatar",
+    ["Enter a Roblox username"]="Escribe un usuario de Roblox", ["Session goals"]="Goles de la sesión",
+    ["Session passes"]="Pases de la sesión", ["Time played"]="Tiempo jugado", ["Player level"]="Nivel del jugador",
+    ["Player Stats"]="Estadísticas del jugador", ["Set Level"]="Establecer nivel",
+    ["Enable when jump"]="Activar al saltar", ["Auto Inf Fast Key"]="Tecla de Auto Inf Fast",
+    ["ZZZ Helper Key"]="Tecla del ayudante ZZZ", ["Air Dribble Key"]="Tecla de regate aéreo",
+    ["Saved Configs"]="Configuraciones guardadas", ["Config Name"]="Nombre de configuración",
+    ["Save Config"]="Guardar configuración", ["Load Config"]="Cargar configuración",
+    ["Delete Config"]="Eliminar configuración", ["Refresh Config List"]="Actualizar lista",
+    ["Loading environment"]="Cargando entorno", ["Loading UI"]="Cargando interfaz",
+    ["Loading modules"]="Cargando módulos", ["Finalizing UI"]="Finalizando interfaz",
+    ["Getting things ready"]="Preparando todo", ["Preparing your interface"]="Preparando la interfaz",
+    ["Checking client services"]="Comprobando servicios del cliente",
+    ["Preparing interface components"]="Preparando componentes de la interfaz",
+    ["Applying features and controls"]="Aplicando funciones y controles",
+    ["AERO is getting ready"]="AERO se está preparando", ["AERO is ready"]="AERO está listo",
+    ["TPS CLIENT"]="CLIENTE TPS", ["Environment"]="Entorno", ["Modules"]="Módulos",
+    ["Close"]="Cerrar", ["Done"]="Listo", ["Cancel"]="Cancelar", ["Search controls..."]="Buscar controles...",
+    ["No results found"]="No se encontraron resultados", ["Copy"]="Copiar", ["Copied!"]="¡Copiado!",
+    ["Apply"]="Aplicar", ["Invalid"]="No válido", ["Success"]="Correcto", ["Get"]="Obtener",
+    ["Anonymous"]="Anónimo", ["Search"]="Buscar", ["Browse"]="Explorar", ["Refresh"]="Actualizar",
+    ["Save without loading"]="Guardar sin cargar", ["Load these settings"]="Cargar esta configuración",
+    ["Upload your config"]="Subir tu configuración", ["My uploads"]="Mis archivos",
+    ["Publish config"]="Publicar configuración", ["More"]="Más", ["Confirm delete"]="Confirmar eliminación",
+    ["Home"]="Inicio", ["Main"]="Principal", ["ESP"]="ESP", ["Config"]="Configuración",
+    ["Arm Reach Controls"]="Control de alcance de brazos", ["Left Leg Reach"]="Alcance de pierna izquierda",
+    ["Right Leg Reach"]="Alcance de pierna derecha", ["Left Arm Reach"]="Alcance de brazo izquierdo",
+    ["Right Arm Reach"]="Alcance de brazo derecho", ["Head Visualizer"]="Visualizador de cabeza",
+    ["Enable Left Arm Reach"]="Activar alcance del brazo izquierdo", ["Enable Right Arm Reach"]="Activar alcance del brazo derecho",
+    ["Enable Left Leg Reach"]="Activar alcance de la pierna izquierda", ["Enable Right Leg Reach"]="Activar alcance de la pierna derecha",
+    ["Left Arm Size"]="Tamaño del brazo izquierdo", ["Right Arm Size"]="Tamaño del brazo derecho",
+    ["Left Leg Size"]="Tamaño de la pierna izquierda", ["Right Leg Size"]="Tamaño de la pierna derecha",
+    ["Show Left Arm Visualizer"]="Mostrar visualizador del brazo izquierdo",
+    ["Show Right Arm Visualizer"]="Mostrar visualizador del brazo derecho",
+    ["Blue Flame"]="Llama azul", ["Faster Cooldown"]="Enfriamiento más rápido",
+    ["Kill Players"]="Eliminar jugadores", ["Kill All Red Team"]="Eliminar a todo el equipo rojo",
+    ["Kill All Blue Team"]="Eliminar a todo el equipo azul", ["Kill All"]="Eliminar a todos",
+    ["Ball Crasher Enabled"]="Activar rompebalón", ["Enable Moss"]="Activar Moss",
+    ["Enable Xeno Moss"]="Activar Xeno Moss", ["Moss Preset"]="Ajuste de Moss",
+    ["Xeno Moss Preset"]="Ajuste de Xeno Moss", ["Select strength"]="Elegir intensidad",
+    ["Select strength level"]="Elegir nivel de intensidad", ["Config Name"]="Nombre de configuración",
+    ["Name to save, load or delete"]="Nombre para guardar, cargar o eliminar",
+    ["Reach X/Z Size"]="Tamaño de alcance X/Z", ["Leg Size"]="Tamaño de piernas",
+    ["Arm Size"]="Tamaño de brazos", ["Head Reach Enabled"]="Activar alcance de cabeza",
+    ["Custom FOV"]="Campo de visión personalizado", ["Field of view"]="Campo de visión",
+    ["Full bright"]="Brillo máximo", ["Remove fog"]="Quitar niebla", ["Walk speed"]="Velocidad al caminar",
+    ["Speed"]="Velocidad", ["Custom jump"]="Salto personalizado", ["Infinite jump"]="Salto infinito",
+    ["Noclip"]="Atravesar paredes", ["Enable"]="Activar", ["Enabled"]="Activado",
+    ["Disable"]="Desactivar", ["Disabled"]="Desactivado", ["On"]="Activado", ["Off"]="Desactivado",
+    ["Theme changed"]="Tema cambiado", ["Couldn’t finish loading"]="No se pudo terminar de cargar",
+    ["Startup complete"]="Inicio completado", ["READY"]="LISTO", ["LOADING"]="CARGANDO",
+    ["Loading environment"]="Cargando entorno", ["Loading UI"]="Cargando interfaz",
+    ["Loading modules"]="Cargando módulos", ["Finalizing UI"]="Finalizando interfaz",
+    ["Checking client services"]="Comprobando servicios del cliente",
+    ["Preparing interface components"]="Preparando componentes de la interfaz",
+    ["Applying features and controls"]="Aplicando funciones y controles",
+    ["AERO is getting ready"]="AERO se está preparando", ["AERO is ready"]="AERO está listo",
+    ["This panel contains the"]="Este panel contiene opciones de",
+    ["Open this tab to view its"]="Abre esta pestaña para ver sus opciones de",
+    ["Choose a rating from 1 to 5 and send feedback."]="Elige una puntuación del 1 al 5 y envía tu opinión.",
+    ["View the game, server size, ping, FPS, session time, and version."]="Consulta el juego, jugadores, ping, FPS, duración de sesión y versión.",
+    ["Toggle leg reach and adjust its X, Y, and Z range."]="Activa el alcance de piernas y ajusta sus valores X, Y y Z.",
+    ["Show the reach visualizer and set the touch delay."]="Muestra el visualizador y ajusta el retraso del contacto.",
+    ["Toggle arm reach and adjust its X, Y, and Z range."]="Activa el alcance de brazos y ajusta sus valores X, Y y Z.",
+    ["Show session goals, passes, play time, and player level."]="Muestra los goles y pases de la sesión, el tiempo jugado y el nivel.",
+    ["Set or choose a displayed ping value."]="Establece o elige el ping que se mostrará.",
+    ["Choose a dribble reaction preset."]="Elige un ajuste de reacción para el regate.",
+    ["Configure the ball crasher toggle and its settings."]="Activa el rompebalón y ajusta sus opciones.",
+    ["Set the autofarm options and toggle it here."]="Ajusta y activa las opciones de auto-granja.",
+    ["Manage saved configs, cloud configs, and settings in this tab."]="Administra configuraciones guardadas, la nube y los ajustes.",
+    ["Toggle prediction and adjust its delay and duration."]="Activa la predicción y ajusta su retraso y duración.",
+    ["Change ball size and collision settings, or use ball shortcuts."]="Cambia el tamaño y la colisión del balón o usa sus accesos directos.",
+    ["Change the ball visualizer, trail, and color options."]="Cambia el visualizador, la estela y los colores del balón.",
+    ["Adjust ball speed and force settings."]="Ajusta la velocidad y la fuerza del balón.",
+    ["Set the displayed player level and respawn options."]="Establece el nivel mostrado y las opciones de reaparición.",
+    ["Configure helper toggles and their keybinds."]="Configura los ayudantes y sus teclas.",
+    ["Read notes about flag settings and support."]="Consulta notas sobre los ajustes de FFlag y su compatibilidad.",
+    ["Change map and environment options."]="Cambia las opciones del mapa y el entorno.",
+    ["Change the other visual and game options."]="Cambia otras opciones visuales y del juego.",
+    ["Choose a skybox preset."]="Elige un ajuste para el cielo.",
+    ["Configure the player targeting options in this panel."]="Configura aquí las opciones para apuntar a jugadores.",
+    ["Choose a skybox preset."]="Elige un ajuste para el cielo.",
+    ["Autofarm options."]="Opciones de auto-granja.",
+    ["Enter your language choice"]="Elige tu idioma",
+    ["English"]="English", ["Español"]="Español",
+    ["Start tutorial"]="Iniciar tutorial", ["Skip"]="Omitir", ["Back"]="Atrás",
+    ["Next"]="Siguiente", ["Finish"]="Terminar", ["Welcome"]="Bienvenido",
+    ["A quick look at the main tabs. Start the tour or skip it and open the tabs yourself."]="Un vistazo rápido a las pestañas. Inicia el recorrido u omítelo para explorarlas.",
+    ["Leg reach and size options."]="Opciones de alcance y tamaño de piernas.",
+    ["Arm reach and size options."]="Opciones de alcance y tamaño de brazos.",
+    ["Delete Goal Vibrations"]="Eliminar vibraciones de gol", ["Delete Vibrations"]="Eliminar vibraciones",
+    ["Auto Farm Goals"]="Auto-granja de goles", ["Autofarm Powers"]="Auto-granja de poderes",
+    ["Autofarm XP (Pass)"]="Auto-granja de XP (pase)", ["Air Dribble Key"]="Tecla de regate aéreo",
+    ["Air Dribble Size"]="Tamaño del regate aéreo", ["Auto Hop"]="Salto automático",
+    ["Auto Inf Fast"]="Auto Inf Fast", ["FPS BOOSTER"]="AUMENTAR FPS",
+    ["Enable Air Dribble Helper"]="Activar ayudante de regate aéreo", ["Enable when jump"]="Activar al saltar",
+    ["Enable / Disable Jumppower"]="Activar / desactivar potencia de salto",
+    ["Enable / Disable Walkspeed"]="Activar / desactivar velocidad al caminar",
+    ["Instant Respawn"]="Reaparición instantánea", ["Set JumpPower"]="Establecer potencia de salto",
+    ["Set Speed"]="Establecer velocidad", ["Set Level"]="Establecer nivel",
+    ["Ball Reach Enabled"]="Activar alcance del balón", ["Ball Reach Size"]="Tamaño del alcance del balón",
+    ["Ball Visualizer"]="Visualizador del balón", ["Ball Speed Value"]="Velocidad del balón",
+    ["Ball Velocity"]="Velocidad del balón", ["Force Ball Speed"]="Forzar velocidad del balón",
+    ["Delete Map"]="Eliminar mapa", ["Show Part"]="Mostrar pieza", ["Note"]="Nota",
+    ["Flame Color"]="Color de la llama", ["Trail Color"]="Color de la estela",
+    ["Unlock All Cards"]="Desbloquear todas las cartas", ["Unlock All Celebrations"]="Desbloquear todas las celebraciones",
+    ["Blue Galaxy Sky"]="Cielo de galaxia azul", ["Cartoon Sky"]="Cielo de dibujos animados",
+    ["Dark Sunset Sky"]="Cielo de atardecer oscuro", ["Green Sky"]="Cielo verde",
+    ["MineCraft Sky"]="Cielo de Minecraft", ["Night Sky"]="Cielo nocturno",
+    ["Orange Sunset Sky"]="Cielo de atardecer naranja", ["Red Blue Nebula Sky"]="Cielo de nebulosa roja y azul",
+    ["Red Dark Sky"]="Cielo rojo oscuro", ["Show Part"]="Mostrar pieza",
+    ["Save"]="Guardar", ["Load"]="Cargar", ["Delete"]="Eliminar",
+    ["Send a message..."]="Escribe un mensaje...", ["Send ↑"]="Enviar ↑",
+    ["Rules"]="Normas", ["I agree · Join chat"]="Acepto · Entrar al chat",
+    ["Not now"]="Ahora no", ["Back to chat"]="Volver al chat", ["Connecting..."]="Conectando...",
+    ["Public chat · profiles are unverified"]="Chat público · perfiles sin verificar",
+    ["Chat cleared on this device."]="Chat borrado de este dispositivo.",
+    ["Test notification + sound"]="Probar notificación y sonido", ["Clear my chat"]="Borrar mi chat",
+    ["Config: ready"]="Configuración: lista", ["TargetTimeDelay"]="Retraso de tiempo objetivo",
+    ["DFIntTargetTimeDelayFactorTenths"]="Factor de retraso de tiempo objetivo",
+    ["DFIntS2PhysicsSenderRate"]="Frecuencia de envío de física",
+    ["FIntInterpolationMaxDelayMSec"]="Retraso máximo de interpolación",
+    ["Choose a rating from 1 to 5."]="Elige una puntuación del 1 al 5.",
+    ["Adjusts head reach using your ping."]="Ajusta el alcance de cabeza según tu ping.",
+    ["Automatically follow the ball."]="Sigue el balón automáticamente.",
+    ["Changes settings used for hit registration."]="Cambia los ajustes del registro de impactos.",
+    ["Enlarges ball for easier ZZZ"]="Aumenta el balón para facilitar ZZZ",
+    ["Enter a username to copy their avatar."]="Escribe un usuario para copiar su avatar.",
+    ["Enter exact ping to display"]="Escribe el ping exacto que se mostrará",
+    ["Enter size e.g. 3"]="Escribe el tamaño, por ejemplo 3",
+    ["Enter the level to display."]="Escribe el nivel que se mostrará.",
+    ["Keeps applying the selected preset."]="Sigue aplicando el ajuste seleccionado.",
+    ["Lowers graphics settings."]="Reduce la calidad gráfica.",
+    ["Move to the ball and apply velocity."]="Se acerca al balón y le aplica velocidad.",
+    ["Moves your character to the goal and kicks the ball."]="Mueve tu personaje a la portería y patea el balón.",
+    ["Only use Air Dribble while jumping."]="Usa el regate aéreo solo al saltar.",
+    ["Press to teleport to ball"]="Pulsa para teletransportarte al balón",
+    ["Set the ball's velocity."]="Establece la velocidad del balón.",
+    ["Set your jump power."]="Establece la potencia de salto.", ["Set your walk speed."]="Establece la velocidad al caminar.",
+    ["Show goals, passes, play time, and level."]="Muestra goles, pases, tiempo jugado y nivel.",
+    ["Show the Air Dribble visualizer."]="Muestra el visualizador de regate aéreo.",
+    ["Some settings may not work."]="Es posible que algunos ajustes no funcionen.",
+    ["Toggle air dribble helper"]="Activa el ayudante de regate aéreo",
+    ["Toggle force ball speed"]="Activa la velocidad forzada del balón",
+    ["Turn off React and reset its settings."]="Desactiva React y restablece sus ajustes.",
+    ["use 0.01 or 0.02"]="usa 0.01 o 0.02",
+    ["Uses a header remote and animation."]="Usa un evento remoto de cabeza y una animación.",
+}}
+function VexUI:TranslateText(value)
+    if type(value) ~= "string" or self.Language ~= "es" then return value end
+    local translated = self.Translations.es[value]
+    if translated then return translated end
+    local axis = value:match("^Head Reach ([XYZ])$")
+    if axis then return "Alcance de cabeza " .. axis end
+    axis = value:match("^Velocity ([XYZ])$")
+    if axis then return "Velocidad " .. axis end
+    axis = value:match("^TPS Offset ([XYZ])$")
+    if axis then return "Desplazamiento TPS " .. axis end
+    local panelName = value:match("^This panel contains the (.+) options%.$")
+    if panelName then return "Este panel contiene opciones de " .. self:TranslateText(panelName) .. "." end
+    local tabName = value:match("^Open this tab to view its (.+) options%.$")
+    if tabName then return "Abre esta pestaña para ver las opciones de " .. self:TranslateText(tabName) .. "." end
+    local left, right = value:match("^(.+) / (.+)$")
+    if left and right then return self:TranslateText(left) .. " / " .. self:TranslateText(right) end
+    return value
+end
+
 function VexUI:Create(class, properties, children)
     properties = properties or {}
+    if type(properties.Text) == "string" then properties.Text = VexUI:TranslateText(properties.Text) end
+    if type(properties.PlaceholderText) == "string" then properties.PlaceholderText = VexUI:TranslateText(properties.PlaceholderText) end
     local inst = Instance.new(class)
     local requestedFontFace, requestedFont = properties.FontFace, properties.Font
 
@@ -183,6 +402,12 @@ function VexUI:Create(class, properties, children)
 
     if properties.ThemeID then
         VexUI:AddThemeObject(inst, properties.ThemeID)
+    end
+    if inst:IsA("TextLabel") or inst:IsA("TextButton") then
+        inst:GetPropertyChangedSignal("Text"):Connect(function()
+            local translated = VexUI:TranslateText(inst.Text)
+            if translated ~= inst.Text then inst.Text = translated end
+        end)
     end
     return inst
 end
@@ -770,6 +995,13 @@ end
 
 -- A themed startup card that follows the main interface palette and spacing.
 function VexUI:StartupLoader(config)
+    config = config or {}
+    local selectedLanguage = config.Language == "es" and "es" or config.Language == "en" and "en" or nil
+    if not selectedLanguage and type(readfile) == "function" then
+        local ok, saved = pcall(readfile, "AERO_Language.txt")
+        if ok and (saved == "en" or saved == "es") then selectedLanguage = saved end
+    end
+    VexUI.Language = selectedLanguage or "en"
     local theme = self.Themes[config.Theme or "Dark"] or self.Themes.Dark
     local function make(class, props, parent)
         local object = Instance.new(class)
@@ -783,7 +1015,7 @@ function VexUI:StartupLoader(config)
         BackgroundTransparency = 0.18, BorderSizePixel = 0, ZIndex = 1}, screen)
     local card = make("CanvasGroup", {AnchorPoint = Vector2.new(0.5,0.5), Position = UDim2.fromScale(0.5,0.5),
         Size = UDim2.new(1,-32,0,264), BackgroundColor3 = theme.ElementColor,
-        BackgroundTransparency = 0.02, BorderSizePixel = 0, ZIndex = 2}, screen)
+        BackgroundTransparency = 0.02, BorderSizePixel = 0, ZIndex = 2, Visible = selectedLanguage ~= nil}, screen)
     make("UISizeConstraint", {MaxSize = Vector2.new(420,264)}, card)
     make("UICorner", {CornerRadius = UDim.new(0,16)}, card)
     make("UIStroke", {Color = theme.Outline, Transparency = 0.22, Thickness = 1}, card)
@@ -861,15 +1093,69 @@ function VexUI:StartupLoader(config)
     local accentLine = make("Frame", {Position=UDim2.new(0,24,1,-10), Size=UDim2.new(1,-48,0,2),
         BackgroundColor3=theme.Accent, BackgroundTransparency=0.68, BorderSizePixel=0, ZIndex=4}, card)
     make("UICorner", {CornerRadius=UDim.new(1,0)}, accentLine)
-    local loader = {Screen = screen, Logo = logo, Closed = false}
+    local loader = {Screen = screen, Logo = logo, Closed = false,
+        Language = selectedLanguage, LanguageReady = selectedLanguage ~= nil}
+    local languageCard
+    if not selectedLanguage then
+        languageCard = make("Frame", {Name="LanguagePicker", AnchorPoint=Vector2.new(0.5,0.5),
+            Position=UDim2.fromScale(0.5,0.5), Size=UDim2.new(1,-32,0,220),
+            BackgroundColor3=theme.ElementColor, BorderSizePixel=0, ZIndex=10}, screen)
+        make("UISizeConstraint", {MaxSize=Vector2.new(380,220)}, languageCard)
+        make("UICorner", {CornerRadius=UDim.new(0,16)}, languageCard)
+        make("UIStroke", {Color=theme.Outline, Transparency=0.2, Thickness=1}, languageCard)
+        make("UIGradient", {Rotation=90, Color=ColorSequence.new(theme.ElementColor,theme.Background),
+            Transparency=NumberSequence.new(0.04,0.12)}, languageCard)
+        make("TextLabel", {Text="AERO", Position=UDim2.new(0,24,0,22), Size=UDim2.new(1,-48,0,26),
+            BackgroundTransparency=1, Font=Enum.Font.GothamBold, TextSize=19, TextColor3=theme.Text,
+            TextXAlignment=Enum.TextXAlignment.Left, ZIndex=11}, languageCard)
+        make("TextLabel", {Text="Choose your language / Elige tu idioma",
+            Position=UDim2.new(0,24,0,59), Size=UDim2.new(1,-48,0,38), BackgroundTransparency=1,
+            Font=Enum.Font.GothamSemibold, TextSize=14, TextColor3=theme.Text,
+            TextXAlignment=Enum.TextXAlignment.Left, TextWrapped=true, ZIndex=11}, languageCard)
+        make("TextLabel", {Text="The interface will use this language. / La interfaz usará este idioma.",
+            Position=UDim2.new(0,24,0,101), Size=UDim2.new(1,-48,0,34), BackgroundTransparency=1,
+            Font=Enum.Font.Gotham, TextSize=11, TextColor3=theme.Muted or theme.Text,
+            TextXAlignment=Enum.TextXAlignment.Left, TextWrapped=true, ZIndex=11}, languageCard)
+        local function chooseLanguage(code, labelText, x)
+            local button = make("TextButton", {Text=labelText, Position=UDim2.new(x,0,1,-58),
+                Size=UDim2.new(0.5,-30,0,38), BackgroundColor3=theme.Accent,
+                BorderSizePixel=0, TextColor3=theme.Background, Font=Enum.Font.GothamSemibold,
+                TextSize=13, AutoButtonColor=true, ZIndex=12}, languageCard)
+            make("UICorner", {CornerRadius=UDim.new(0,9)}, button)
+            button.Activated:Connect(function()
+                if loader.Closed or loader.LanguageReady then return end
+                selectedLanguage = code
+                loader.Language = code
+                loader.LanguageReady = true
+                VexUI.Language = code
+                if type(writefile) == "function" then pcall(writefile, "AERO_Language.txt", code) end
+                languageCard:Destroy()
+                card.Visible = true
+                for _, object in ipairs(card:GetDescendants()) do
+                    if object:IsA("TextLabel") or object:IsA("TextButton") then
+                        object.Text = VexUI:TranslateText(object.Text)
+                    end
+                end
+            end)
+        end
+        chooseLanguage("en", "English", 0)
+        chooseLanguage("es", "Español", 0.5)
+    end
     local progressTween
+    function loader:WaitForLanguage()
+        while not self.LanguageReady and not self.Closed do
+            game:GetService("RunService").Heartbeat:Wait()
+        end
+        if not self.Language then self.Language = "en" end
+        VexUI.Language = self.Language
+    end
     function loader:Stage(text, fraction, description)
         if self.Closed then return end
         local progress = math.clamp(tonumber(fraction) or 0,0,1)
-        status.Text = text; detail.Text = description or ""
+        status.Text = VexUI:TranslateText(text); detail.Text = VexUI:TranslateText(description or "")
         percent.Text = tostring(math.floor(progress * 100 + 0.5)) .. "%"
-        phase.Text = progress >= 1 and "AERO is ready" or "AERO is getting ready"
-        statusChip.Text = progress >= 1 and "READY" or "LOADING"
+        phase.Text = VexUI:TranslateText(progress >= 1 and "AERO is ready" or "AERO is getting ready")
+        statusChip.Text = VexUI:TranslateText(progress >= 1 and "READY" or "LOADING")
         local activeStage = progress >= 0.8 and 4 or (progress < 0.3 and 1 or progress < 0.5 and 2 or 3)
         for index, row in ipairs(stageItems) do
             local complete = index < activeStage or progress >= 1
@@ -915,6 +1201,8 @@ function VexUI:StartupLoader(config)
 end
 function UI:_BuildWindow(Config, startup)
     Config = Config or {}
+    if startup and startup.WaitForLanguage then startup:WaitForLanguage() end
+    if startup and startup.Language then Config.Language = startup.Language end
     local ok, failure = pcall(function()
         if startup then startup:Stage("Loading environment",0.1,"Checking client services") end
         if not game:IsLoaded() then game.Loaded:Wait() end
@@ -931,6 +1219,8 @@ function UI:_BuildWindow(Config, startup)
     if startup then startup:Stage("Loading modules",0.5,"Applying features and controls") end
     local Window = {
         Name = Config.Name or "VexUI",
+        Language = VexUI.Language,
+        Screen = UIScreen,
         Author = Config.Author or nil,
         Icon = Config.Icon or nil,
         ToggleKey = Config.ToggleKey or Enum.KeyCode.RightShift,
@@ -966,6 +1256,7 @@ function UI:_BuildWindow(Config, startup)
         SearchIndex = {},
     }
     Window.IslandOpen = true
+    function Window:Translate(text) return VexUI:TranslateText(text) end
     function Window:GetIcon(name)
         return GetIcon(name)
     end
