@@ -997,9 +997,21 @@ end
 function VexUI:StartupLoader(config)
     config = config or {}
     local selectedLanguage = config.Language == "es" and "es" or config.Language == "en" and "en" or nil
+    local setupDone = false
+    local savedMode, savedTutorial = "emulation", true
     if not selectedLanguage and type(readfile) == "function" then
         local ok, saved = pcall(readfile, "AERO_Language.txt")
         if ok and (saved == "en" or saved == "es") then selectedLanguage = saved end
+    end
+    if type(readfile) == "function" then
+        local ok, saved = pcall(readfile, "AERO_StartupSetup.txt")
+        setupDone = ok and saved == "done"
+        local prefsOk, prefs = pcall(readfile, "AERO_StartupPrefs.txt")
+        if prefsOk and type(prefs) == "string" then
+            local mode, tutorial = prefs:match("^(%w+)|([01])$")
+            if mode == "emulation" or mode == "basic" then savedMode = mode end
+            if tutorial == "0" then savedTutorial = false elseif tutorial == "1" then savedTutorial = true end
+        end
     end
     VexUI.Language = selectedLanguage or "en"
     local theme = self.Themes[config.Theme or "Dark"] or self.Themes.Dark
@@ -1015,7 +1027,7 @@ function VexUI:StartupLoader(config)
         BackgroundTransparency = 0.18, BorderSizePixel = 0, ZIndex = 1}, screen)
     local card = make("CanvasGroup", {AnchorPoint = Vector2.new(0.5,0.5), Position = UDim2.fromScale(0.5,0.5),
         Size = UDim2.new(1,-32,0,264), BackgroundColor3 = theme.ElementColor,
-        BackgroundTransparency = 0.02, BorderSizePixel = 0, ZIndex = 2, Visible = selectedLanguage ~= nil}, screen)
+        BackgroundTransparency = 0.02, BorderSizePixel = 0, ZIndex = 2, Visible = setupDone}, screen)
     make("UISizeConstraint", {MaxSize = Vector2.new(420,264)}, card)
     make("UICorner", {CornerRadius = UDim.new(0,16)}, card)
     make("UIStroke", {Color = theme.Outline, Transparency = 0.22, Thickness = 1}, card)
@@ -1094,52 +1106,177 @@ function VexUI:StartupLoader(config)
         BackgroundColor3=theme.Accent, BackgroundTransparency=0.68, BorderSizePixel=0, ZIndex=4}, card)
     make("UICorner", {CornerRadius=UDim.new(1,0)}, accentLine)
     local loader = {Screen = screen, Logo = logo, Closed = false,
-        Language = selectedLanguage, LanguageReady = selectedLanguage ~= nil}
-    local languageCard
-    if not selectedLanguage then
-        languageCard = make("Frame", {Name="LanguagePicker", AnchorPoint=Vector2.new(0.5,0.5),
-            Position=UDim2.fromScale(0.5,0.5), Size=UDim2.new(1,-32,0,220),
+        Language = selectedLanguage, LanguageReady = setupDone,
+        SetupMode = savedMode, TutorialChoice = savedTutorial, SetupWasNew = not setupDone}
+    if not setupDone then
+        local wizard = make("Frame", {Name="FirstRunSetup", AnchorPoint=Vector2.new(0.5,0.5),
+            Position=UDim2.fromScale(0.5,0.5), Size=UDim2.fromOffset(420,360),
             BackgroundColor3=theme.ElementColor, BorderSizePixel=0, ZIndex=10}, screen)
-        make("UISizeConstraint", {MaxSize=Vector2.new(380,220)}, languageCard)
-        make("UICorner", {CornerRadius=UDim.new(0,16)}, languageCard)
-        make("UIStroke", {Color=theme.Outline, Transparency=0.2, Thickness=1}, languageCard)
+        local viewportSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(800,600)
+        local wizardScale = math.min(1,(viewportSize.X-24)/420,(viewportSize.Y-24)/360)
+        local scaleObject = make("UIScale", {Scale=math.clamp(wizardScale,0.62,1)}, wizard)
+        make("UISizeConstraint", {MaxSize=Vector2.new(420,360)}, wizard)
+        make("UICorner", {CornerRadius=UDim.new(0,16)}, wizard)
+        make("UIStroke", {Color=theme.Outline, Transparency=0.2, Thickness=1}, wizard)
         make("UIGradient", {Rotation=90, Color=ColorSequence.new(theme.ElementColor,theme.Background),
-            Transparency=NumberSequence.new(0.04,0.12)}, languageCard)
-        make("TextLabel", {Text="AERO", Position=UDim2.new(0,24,0,22), Size=UDim2.new(1,-48,0,26),
-            BackgroundTransparency=1, Font=Enum.Font.GothamBold, TextSize=19, TextColor3=theme.Text,
-            TextXAlignment=Enum.TextXAlignment.Left, ZIndex=11}, languageCard)
-        make("TextLabel", {Text="Choose your language / Elige tu idioma",
-            Position=UDim2.new(0,24,0,59), Size=UDim2.new(1,-48,0,38), BackgroundTransparency=1,
-            Font=Enum.Font.GothamSemibold, TextSize=14, TextColor3=theme.Text,
-            TextXAlignment=Enum.TextXAlignment.Left, TextWrapped=true, ZIndex=11}, languageCard)
-        make("TextLabel", {Text="The interface will use this language. / La interfaz usará este idioma.",
-            Position=UDim2.new(0,24,0,101), Size=UDim2.new(1,-48,0,34), BackgroundTransparency=1,
-            Font=Enum.Font.Gotham, TextSize=11, TextColor3=theme.Muted or theme.Text,
-            TextXAlignment=Enum.TextXAlignment.Left, TextWrapped=true, ZIndex=11}, languageCard)
-        local function chooseLanguage(code, labelText, x)
-            local button = make("TextButton", {Text=labelText, Position=UDim2.new(x,0,1,-58),
-                Size=UDim2.new(0.5,-30,0,38), BackgroundColor3=theme.Accent,
-                BorderSizePixel=0, TextColor3=theme.Background, Font=Enum.Font.GothamSemibold,
-                TextSize=13, AutoButtonColor=true, ZIndex=12}, languageCard)
-            make("UICorner", {CornerRadius=UDim.new(0,9)}, button)
-            button.Activated:Connect(function()
-                if loader.Closed or loader.LanguageReady then return end
-                selectedLanguage = code
-                loader.Language = code
-                loader.LanguageReady = true
-                VexUI.Language = code
-                if type(writefile) == "function" then pcall(writefile, "AERO_Language.txt", code) end
-                languageCard:Destroy()
-                card.Visible = true
-                for _, object in ipairs(card:GetDescendants()) do
-                    if object:IsA("TextLabel") or object:IsA("TextButton") then
-                        object.Text = VexUI:TranslateText(object.Text)
-                    end
-                end
-            end)
+            Transparency=NumberSequence.new(0.04,0.12)}, wizard)
+        local function copy(en, es) return VexUI.Language == "es" and es or en end
+        local heading = make("TextLabel", {Text="AERO", Position=UDim2.new(0,22,0,18),
+            Size=UDim2.new(1,-44,0,26), BackgroundTransparency=1, Font=Enum.Font.GothamBold,
+            TextSize=19, TextColor3=theme.Text, TextXAlignment=Enum.TextXAlignment.Left, ZIndex=11}, wizard)
+        local stepLabel = make("TextLabel", {Text="01 / 03", Position=UDim2.new(1,-94,0,23),
+            Size=UDim2.new(0,72,0,16), BackgroundTransparency=1, Font=Enum.Font.GothamMedium,
+            TextSize=10, TextColor3=theme.Muted or theme.Text, TextXAlignment=Enum.TextXAlignment.Right, ZIndex=11}, wizard)
+        local title = make("TextLabel", {Position=UDim2.new(0,22,0,58), Size=UDim2.new(1,-44,0,28),
+            BackgroundTransparency=1, Font=Enum.Font.GothamSemibold, TextSize=16,
+            TextColor3=theme.Text, TextXAlignment=Enum.TextXAlignment.Left, ZIndex=11}, wizard)
+        local subtitle = make("TextLabel", {Position=UDim2.new(0,22,0,89), Size=UDim2.new(1,-44,0,38),
+            BackgroundTransparency=1, Font=Enum.Font.Gotham, TextSize=11,
+            TextColor3=theme.Muted or theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
+            TextYAlignment=Enum.TextYAlignment.Top, TextWrapped=true, ZIndex=11}, wizard)
+        local pages = {}
+        local function page(name)
+            local frame = make("Frame", {Name=name, Position=UDim2.new(0,22,0,137),
+                Size=UDim2.new(1,-44,0,140), BackgroundTransparency=1, Visible=false, ZIndex=11}, wizard)
+            pages[#pages+1] = frame
+            return frame
         end
-        chooseLanguage("en", "English", 0)
-        chooseLanguage("es", "Español", 0.5)
+        local languagePage, modePage, tutorialPage = page("LanguagePage"), page("ModePage"), page("TutorialPage")
+        local showLanguageStep = selectedLanguage == nil
+        local languageChoice = selectedLanguage or "en"
+        local modeChoice, tutorialChoice = savedMode, savedTutorial
+        local optionButtons, optionLabels = {}, {}
+        local function option(parent, key, label, description, pos, size)
+            local button = make("TextButton", {Name=key, Text="", Position=pos, Size=size,
+                BackgroundColor3=theme.Background, BackgroundTransparency=0.05,
+                BorderSizePixel=0, AutoButtonColor=false, ZIndex=12}, parent)
+            make("UICorner", {CornerRadius=UDim.new(0,10)}, button)
+            make("UIStroke", {Color=theme.Outline, Transparency=0.35, Thickness=1}, button)
+            local titleLabel = make("TextLabel", {Text=label.en, Position=UDim2.new(0,12,0,10),
+                Size=UDim2.new(1,-24,0,20), BackgroundTransparency=1, Font=Enum.Font.GothamSemibold,
+                TextSize=13, TextColor3=theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
+                TextTruncate=Enum.TextTruncate.AtEnd, ZIndex=13}, button)
+            local detailLabel = make("TextLabel", {Text=description.en, Position=UDim2.new(0,12,0,33),
+                Size=UDim2.new(1,-24,0,26), BackgroundTransparency=1, Font=Enum.Font.Gotham,
+                TextSize=10, TextColor3=theme.Muted or theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
+                TextYAlignment=Enum.TextYAlignment.Top, TextWrapped=true, ZIndex=13}, button)
+            optionButtons[key] = button
+            optionLabels[key] = {Title=titleLabel, Detail=detailLabel, Copy=label, Description=description}
+            return button
+        end
+        local englishButton = option(languagePage,"English", {en="English",es="English"},
+            {en="Use English throughout the interface.",es="Usa inglés en toda la interfaz."},
+            UDim2.new(0,0,0,0), UDim2.new(0.5,-6,0,68))
+        local spanishButton = option(languagePage,"Spanish", {en="Español",es="Español"},
+            {en="Use Spanish throughout the interface.",es="Usa español en toda la interfaz."},
+            UDim2.new(0.5,6,0,0), UDim2.new(0.5,-6,0,68))
+        local emulationButton = option(modePage,"Emulation",
+            {en="Bypass method emulation · Recommended",es="Emulación del método · Recomendada"},
+            {en="Cosmetic label only. No bypass method is applied.",es="Solo etiqueta visual. No se aplica ningún método."},
+            UDim2.new(0,0,0,0), UDim2.new(1,0,0,62))
+        local basicButton = option(modePage,"Basic",
+            {en="Basic · Higher ban risk",es="Básico · Mayor riesgo de baneo"},
+            {en="Cosmetic label only. It does not verify or change ban risk.",es="Solo etiqueta visual. No confirma ni cambia el riesgo de baneo."},
+            UDim2.new(0,0,0,70), UDim2.new(1,0,0,62))
+        local tourYes = option(tutorialPage,"TourYes", {en="Start the tutorial",es="Iniciar el tutorial"},
+            {en="After loading, it walks through the tabs and their panels.",es="Tras cargar, explica las pestañas y sus paneles."},
+            UDim2.new(0,0,0,0), UDim2.new(0.5,-6,0,68))
+        local tourNo = option(tutorialPage,"TourNo", {en="Skip the tutorial",es="Omitir el tutorial"},
+            {en="You can use every tab right away.",es="Puedes usar todas las pestañas directamente."},
+            UDim2.new(0.5,6,0,0), UDim2.new(0.5,-6,0,68))
+        local back = make("TextButton", {Text="Back", Position=UDim2.new(0,22,1,-54),
+            Size=UDim2.new(0.5,-28,0,36), BackgroundColor3=theme.Background,
+            BorderSizePixel=0, TextColor3=theme.Text, Font=Enum.Font.GothamSemibold,
+            TextSize=12, Visible=false, ZIndex=12}, wizard)
+        local nextButton = make("TextButton", {Text="Continue", Position=UDim2.new(0.5,6,1,-54),
+            Size=UDim2.new(0.5,-28,0,36), BackgroundColor3=theme.Accent,
+            BorderSizePixel=0, TextColor3=theme.Background, Font=Enum.Font.GothamSemibold,
+            TextSize=12, ZIndex=12}, wizard)
+        for _, button in ipairs({back,nextButton}) do make("UICorner", {CornerRadius=UDim.new(0,9)}, button) end
+        local currentPage = selectedLanguage and 2 or 1
+        local function updateSelection()
+            local selected = currentPage == 1 and languageChoice or currentPage == 2 and modeChoice or (tutorialChoice and "TourYes" or "TourNo")
+            local map = currentPage == 1 and {en="English",es="Spanish"} or currentPage == 2 and {emulation="Emulation",basic="Basic"} or {TourYes="TourYes",TourNo="TourNo"}
+            for key, button in pairs(optionButtons) do
+                local active = map[selected] == key
+                button.BackgroundColor3 = active and theme.Accent:Lerp(theme.Background,0.78) or theme.Background
+                local stroke = button:FindFirstChildOfClass("UIStroke")
+                if stroke then stroke.Color = active and theme.Accent or theme.Outline end
+            end
+        end
+        local function refreshOptionCopy()
+            local language = VexUI.Language == "es" and "es" or "en"
+            for _, values in pairs(optionLabels) do
+                values.Title.Text = values.Copy[language]
+                values.Detail.Text = values.Description[language]
+            end
+        end
+        local function setPage(index)
+            currentPage = math.clamp(index,1,3)
+            for pageIndex, frame in ipairs(pages) do frame.Visible = pageIndex == currentPage end
+            stepLabel.Text = string.format("%02d / 03",currentPage)
+            back.Visible = currentPage > 1
+            back.Text = copy("Back","Atrás")
+            nextButton.Text = currentPage == 3 and copy("Finish setup","Terminar") or copy("Continue","Continuar")
+            if currentPage == 1 then
+                title.Text = copy("Choose your language","Elige tu idioma")
+                subtitle.Text = copy("This sets the language used across the interface.","Esto define el idioma de toda la interfaz.")
+            elseif currentPage == 2 then
+                title.Text = copy("Choose a startup profile","Elige un perfil de inicio")
+                subtitle.Text = copy("Choose a label for the startup screen. This is cosmetic only.","Elige una etiqueta para el inicio. Solo cambia la apariencia.")
+            else
+                title.Text = copy("Take a quick tour?","¿Quieres ver un recorrido?")
+                subtitle.Text = copy("The guided tutorial opens after the interface loads.","El tutorial guiado aparecerá después de cargar la interfaz.")
+            end
+            refreshOptionCopy()
+            updateSelection()
+        end
+        if selectedLanguage then VexUI.Language = selectedLanguage end
+        local function refreshLanguage()
+            VexUI.Language = languageChoice
+            setPage(currentPage)
+        end
+        englishButton.Activated:Connect(function() languageChoice="en"; refreshLanguage() end)
+        spanishButton.Activated:Connect(function() languageChoice="es"; refreshLanguage() end)
+        emulationButton.Activated:Connect(function() modeChoice="emulation"; updateSelection() end)
+        basicButton.Activated:Connect(function() modeChoice="basic"; updateSelection() end)
+        tourYes.Activated:Connect(function() tutorialChoice=true; updateSelection() end)
+        tourNo.Activated:Connect(function() tutorialChoice=false; updateSelection() end)
+        local function persistSetup()
+            VexUI.Language = languageChoice
+            loader.Language = languageChoice
+            loader.SetupMode = modeChoice
+            loader.TutorialChoice = tutorialChoice
+            loader.LanguageReady = true
+            if type(writefile) == "function" then
+                pcall(writefile,"AERO_Language.txt",languageChoice)
+                pcall(writefile,"AERO_StartupPrefs.txt",modeChoice .. "|" .. (tutorialChoice and "1" or "0"))
+                pcall(writefile,"AERO_StartupSetup.txt","done")
+            end
+            wizard:Destroy()
+            card.Visible = true
+            for _, object in ipairs(card:GetDescendants()) do
+                if object:IsA("TextLabel") or object:IsA("TextButton") then object.Text = VexUI:TranslateText(object.Text) end
+            end
+        end
+        back.Activated:Connect(function()
+            if currentPage == 2 and showLanguageStep then setPage(1)
+            elseif currentPage == 3 then setPage(2) end
+        end)
+        nextButton.Activated:Connect(function()
+            if currentPage == 1 then
+                selectedLanguage = languageChoice
+                VexUI.Language = selectedLanguage
+                setPage(2)
+            elseif currentPage == 2 then
+                if not modeChoice then modeChoice = "emulation" end
+                setPage(3)
+            else
+                persistSetup()
+            end
+        end)
+        refreshLanguage()
+        setPage(currentPage)
     end
     local progressTween
     function loader:WaitForLanguage()
@@ -1202,7 +1339,12 @@ end
 function UI:_BuildWindow(Config, startup)
     Config = Config or {}
     if startup and startup.WaitForLanguage then startup:WaitForLanguage() end
-    if startup and startup.Language then Config.Language = startup.Language end
+    if startup then
+        if startup.Language then Config.Language = startup.Language end
+        Config.SetupMode = startup.SetupMode
+        Config.TutorialChoice = startup.TutorialChoice
+        Config.SetupWasNew = startup.SetupWasNew
+    end
     local ok, failure = pcall(function()
         if startup then startup:Stage("Loading environment",0.1,"Checking client services") end
         if not game:IsLoaded() then game.Loaded:Wait() end
@@ -1220,6 +1362,9 @@ function UI:_BuildWindow(Config, startup)
     local Window = {
         Name = Config.Name or "VexUI",
         Language = VexUI.Language,
+        SetupMode = Config.SetupMode or "emulation",
+        TutorialChoice = Config.TutorialChoice ~= false,
+        SetupWasNew = Config.SetupWasNew == true,
         Screen = UIScreen,
         Author = Config.Author or nil,
         Icon = Config.Icon or nil,
