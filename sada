@@ -3965,7 +3965,7 @@ function UI:_BuildWindow(Config, startup)
             local inputOwner, phase, startValue
             local scrollWasEnabled, movedConnection, endedConnection
             local renderSize = UserInputService.TouchEnabled
-                and math.ceil(14 / math.max(0.05, Main.UIScale.Scale)) or 12
+                and math.ceil(12 / math.max(0.05, Main.UIScale.Scale)) or 12
             local function Paint()
                 local fraction = Ratio(value)
                 fill.Size = UDim2.new(fraction, 0, 1, 0)
@@ -3995,7 +3995,7 @@ function UI:_BuildWindow(Config, startup)
                     if RightScroll.Parent then RightScroll.ScrollingEnabled = scrollWasEnabled end
                 end
                 renderSize = UserInputService.TouchEnabled
-                    and math.ceil(14 / math.max(0.05, Main.UIScale.Scale)) or 12
+                    and math.ceil(12 / math.max(0.05, Main.UIScale.Scale)) or 12
                 if not destroyed then Paint() end
                 if notify and value ~= startValue then NotifyAction(Slider.Title, FormatValue(value)) end
             end
@@ -4013,7 +4013,7 @@ function UI:_BuildWindow(Config, startup)
                 HoldingSlider = true
                 scrollWasEnabled = RightScroll.ScrollingEnabled
                 RightScroll.ScrollingEnabled = false
-                renderSize = touch and math.ceil(14 / math.max(0.05, Main.UIScale.Scale)) or 12
+                renderSize = touch and math.ceil(12 / math.max(0.05, Main.UIScale.Scale)) or 12
                 Paint()
                 return true
             end
@@ -4061,16 +4061,16 @@ function UI:_BuildWindow(Config, startup)
                 local scale = math.max(0.05, Main.UIScale.Scale)
                 local touch = UserInputService.TouchEnabled
                 -- Keep touch sliders compact while leaving enough room to drag the rail.
-                local targetHeight = touch and math.max(32, math.ceil(32 / scale)) or 30
+                local targetHeight = touch and math.max(24, math.ceil(24 / scale)) or 30
                 local headerHeight = math.max(24, math.ceil(textColumn.AbsoluteSize.Y / scale))
                 local height = math.max(Slider.SizeY, 8 + headerHeight + targetHeight + 4)
                 if row.Size.Y.Offset ~= height then row.Size = UDim2.new(row.Size.X.Scale, row.Size.X.Offset, 0, height) end
-                local railThickness = touch and math.max(4, math.ceil(4 / scale)) or 4
+                local railThickness = touch and math.max(3, math.ceil(3 / scale)) or 4
                 rail.Size = UDim2.new(1, -18, 0, railThickness)
                 hit.Position = UDim2.new(0, 8, 0, height - targetHeight - 4)
                 hit.Size = UDim2.new(1, -16, 0, targetHeight)
                 if not inputOwner then
-                    renderSize = touch and math.ceil(14 / scale) or 12
+                    renderSize = touch and math.ceil(12 / scale) or 12
                     Paint()
                 end
             end
