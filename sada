@@ -1172,11 +1172,11 @@ function VexUI:StartupLoader(config)
             UDim2.new(0.5,6,0,0), UDim2.new(0.5,-6,0,68))
         local emulationButton = option(modePage,"Emulation",
             {en="Bypass method emulation · Recommended",es="Emulación del método · Recomendada"},
-            {en="Cosmetic label only. No bypass method is applied.",es="Solo etiqueta visual. No se aplica ningún método."},
+            {en="Emulates the anticheat",es="Emula el sistema antitrampas."},
             UDim2.new(0,0,0,0), UDim2.new(1,0,0,62))
         local basicButton = option(modePage,"Basic",
             {en="Basic · Higher ban risk",es="Básico · Mayor riesgo de baneo"},
-            {en="Cosmetic label only. It does not verify or change ban risk.",es="Solo etiqueta visual. No confirma ni cambia el riesgo de baneo."},
+            {en="Uses the basic remote delete bypass.",es="Utiliza la evasión básica de la eliminación remota."},
             UDim2.new(0,0,0,70), UDim2.new(1,0,0,62))
         local tourYes = option(tutorialPage,"TourYes", {en="Start the tutorial",es="Iniciar el tutorial"},
             {en="After loading, it walks through the tabs and their panels.",es="Tras cargar, explica las pestañas y sus paneles."},
