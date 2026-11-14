@@ -4926,7 +4926,7 @@ function UI:_BuildWindow(Config, startup)
         if not Window.AutoScale or not workspace.CurrentCamera then return end
         local viewport = workspace.CurrentCamera.ViewportSize
         if viewport.X <= 0 or viewport.Y <= 0 then return end
-        local margin = UserInputService.TouchEnabled and 12 or 24
+        local margin = UserInputService.TouchEnabled and 20 or 24
         Main.UIScale.Scale = math.max(0.05, math.min(Window.ScaleMultiplier or 1,
             (viewport.X - margin * 2) / Window.Size.X.Offset,
             (viewport.Y - margin * 2) / Window.Size.Y.Offset))
