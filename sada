@@ -794,7 +794,7 @@ function VexUI:StartupLoader(config)
         Size=UDim2.fromOffset(46,46), BackgroundColor3=theme.Accent:Lerp(theme.Background,0.82),
         BorderSizePixel=0, ClipsDescendants=true, ZIndex=4}, card)
     make("UICorner", {CornerRadius=UDim.new(1,0)}, logoBadge)
-    local logo = make("ImageLabel", {Name="AEROLogo", Image="rbxassetid://92118712126124",
+    local logo = make("ImageLabel", {Name="AEROLogo", Image="rbxassetid://107388329949009",
         AnchorPoint=Vector2.new(0.5,0.5), Position=UDim2.fromScale(0.5,0.5),
         Size=UDim2.fromOffset(60,60), BackgroundTransparency=1,
         ScaleType=Enum.ScaleType.Fit, ImageColor3=theme.Text, ZIndex=5}, logoBadge)
