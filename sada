@@ -5295,7 +5295,7 @@ function UI:_BuildWindow(Config, startup)
     local defaultReopenKey = Window.ToggleKey
     -- Keep the initial touch layout slightly more compact on tablets and phones.
     -- FitViewport still shrinks further when the actual viewport requires it.
-    Window.ScaleMultiplier = UserInputService.TouchEnabled and 0.9 or 1
+    Window.ScaleMultiplier = UserInputService.TouchEnabled and 0.82 or 1
     local reopenConnection = UserInputService.InputBegan:Connect(function(input, processed)
         if not windowAlive or not Main.Parent then return end
         if capturingReopenKey or UserInputService:GetFocusedTextBox() then return end
