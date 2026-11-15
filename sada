@@ -554,7 +554,7 @@ function Utility:ElText(parent, title, desc, scope)
         AutomaticSize = "Y",
         ZIndex = 16,
         FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold),
-        TextSize = 14,
+        TextSize = game:GetService("UserInputService").TouchEnabled and 15 or 14,
         TextColor3 = Color3.fromRGB(255, 255, 255),
         RichText = true,
         TextWrapped = true,
@@ -1881,7 +1881,9 @@ function UI:_BuildWindow(Config, startup)
             }),
         }),
         VexUI:Create("UIScale", {
-            Scale = 1,
+            -- Keep the full mobile layout in view while preserving touch-sized
+            -- slider hit areas (their layout compensates for this scale).
+            Scale = UserInputService.TouchEnabled and 0.82 or 1,
         }),
     })
     local contentFrame = Main:FindFirstChild("Frame")
@@ -3673,13 +3675,16 @@ function UI:_BuildWindow(Config, startup)
             local Title, Desc = Utility:ElText(Inner, Togglee.Title, Togglee.Desc, "Toggle")
             Inner.Size = UDim2.new(1, -64, 0, 0)
 
+            local touch = UserInputService.TouchEnabled
+            local toggleWidth, toggleHeight = touch and 44 or 38, touch and 28 or 24
+            local knobSize = touch and 18 or 16
             local ToggleV = VexUI:Create("Frame", {
                 Parent = ToggleFrame,
                 AnchorPoint = Vector2.new(.96, 0.5),
                 Position = UDim2.new(.96, 0, 0.5, 0),
                 ClipsDescendants = true,
                 BackgroundTransparency = 0.5,
-                Size = UDim2.new(0, 38, 0, 24),
+                Size = UDim2.new(0, toggleWidth, 0, toggleHeight),
                 ZIndex = 15,
                 ThemeID = {
                     BackgroundColor3 = "Toggle.Placeholder|Placeholder"
@@ -3687,10 +3692,10 @@ function UI:_BuildWindow(Config, startup)
             },{
                 VexUI:Create("Frame", {
                     AnchorPoint = Vector2.new(0.5, 0.5),
-                    Position = UDim2.new(0, 12, 0.5, 0),
+                    Position = UDim2.new(0, touch and 13 or 12, 0.5, 0),
                     ClipsDescendants = true,
                     BackgroundTransparency = 0.8,
-                    Size = UDim2.new(0, 16, 0, 16),
+                    Size = UDim2.new(0, knobSize, 0, knobSize),
                     ZIndex = 15,
                     ThemeID = {
                         BackgroundColor3 = "Toggle.ToggleVal|Text"
@@ -3743,9 +3748,9 @@ function UI:_BuildWindow(Config, startup)
                 })
                 ToggleV.BackgroundTransparency = Val and 0.12 or 0
                 local properties = {
-                    Position = UDim2.new(0, Val and 26 or 12, 0.5, 0),
+                    Position = UDim2.new(0, Val and (touch and 31 or 26) or (touch and 13 or 12), 0.5, 0),
                     BackgroundTransparency = Val and 0 or 0.55,
-                    Size = UDim2.new(0, 16, 0, 16),
+                    Size = UDim2.new(0, knobSize, 0, knobSize),
                 }
                 if animate then
                     knobTween = TweenService:Create(ToggleV.Frame,
@@ -3780,12 +3785,13 @@ function UI:_BuildWindow(Config, startup)
                 Name = "SwitchHit", Parent = Beeee,
                 BackgroundTransparency = 1, Text = "", TextTransparency = 1,
                 Active = true, AutoButtonColor = false, ZIndex = 26,
-                Size = UDim2.new(0, 48, 1, 0),
+                Size = UDim2.new(0, touch and 56 or 48, 1, 0),
             })
             local function AlignSwitchHit()
                 local scale = math.max(0.05, Main.UIScale.Scale)
                 local center = ToggleV.AbsolutePosition.X + ToggleV.AbsoluteSize.X / 2
-                SwitchHit.Position = UDim2.new(0, (center - Beeee.AbsolutePosition.X) / scale - 24, 0, 0)
+                local hitWidth = touch and 56 or 48
+                SwitchHit.Position = UDim2.new(0, (center - Beeee.AbsolutePosition.X) / scale - hitWidth / 2, 0, 0)
             end
             ToggleV:GetPropertyChangedSignal("AbsolutePosition"):Connect(AlignSwitchHit)
             ToggleV:GetPropertyChangedSignal("AbsoluteSize"):Connect(AlignSwitchHit)
@@ -3932,7 +3938,7 @@ function UI:_BuildWindow(Config, startup)
             local valueBox = VexUI:Create("TextBox", {
                 Name = "Value", Parent = card, AnchorPoint = Vector2.new(1, 0),
                 Position = UDim2.new(1, -12, 0, 8), Size = UDim2.new(0, 64, 0, 26),
-                Text = "", TextSize = 12, Font = Enum.Font.GothamMedium,
+                Text = "", TextSize = UserInputService.TouchEnabled and 13 or 12, Font = Enum.Font.GothamMedium,
                 ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Center,
                 BackgroundTransparency = 0.35, BorderSizePixel = 0, ZIndex = 20,
                 ThemeID = {BackgroundColor3 = "Slider.Placeholder|Placeholder", TextColor3 = "Slider.ValueText|Accent"},
@@ -3965,7 +3971,7 @@ function UI:_BuildWindow(Config, startup)
             local inputOwner, phase, startValue
             local scrollWasEnabled, movedConnection, endedConnection
             local renderSize = UserInputService.TouchEnabled
-                and math.ceil(12 / math.max(0.05, Main.UIScale.Scale)) or 12
+                and math.ceil(14 / math.max(0.05, Main.UIScale.Scale)) or 12
             local function Paint()
                 local fraction = Ratio(value)
                 fill.Size = UDim2.new(fraction, 0, 1, 0)
@@ -3995,7 +4001,7 @@ function UI:_BuildWindow(Config, startup)
                     if RightScroll.Parent then RightScroll.ScrollingEnabled = scrollWasEnabled end
                 end
                 renderSize = UserInputService.TouchEnabled
-                    and math.ceil(12 / math.max(0.05, Main.UIScale.Scale)) or 12
+                    and math.ceil(14 / math.max(0.05, Main.UIScale.Scale)) or 12
                 if not destroyed then Paint() end
                 if notify and value ~= startValue then NotifyAction(Slider.Title, FormatValue(value)) end
             end
@@ -4013,7 +4019,7 @@ function UI:_BuildWindow(Config, startup)
                 HoldingSlider = true
                 scrollWasEnabled = RightScroll.ScrollingEnabled
                 RightScroll.ScrollingEnabled = false
-                renderSize = touch and math.ceil(12 / math.max(0.05, Main.UIScale.Scale)) or 12
+                renderSize = touch and math.ceil(14 / math.max(0.05, Main.UIScale.Scale)) or 12
                 Paint()
                 return true
             end
@@ -4061,16 +4067,16 @@ function UI:_BuildWindow(Config, startup)
                 local scale = math.max(0.05, Main.UIScale.Scale)
                 local touch = UserInputService.TouchEnabled
                 -- Keep touch sliders compact while leaving enough room to drag the rail.
-                local targetHeight = touch and math.max(24, math.ceil(24 / scale)) or 30
+                local targetHeight = touch and math.max(30, math.ceil(30 / scale)) or 30
                 local headerHeight = math.max(24, math.ceil(textColumn.AbsoluteSize.Y / scale))
                 local height = math.max(Slider.SizeY, 8 + headerHeight + targetHeight + 4)
                 if row.Size.Y.Offset ~= height then row.Size = UDim2.new(row.Size.X.Scale, row.Size.X.Offset, 0, height) end
-                local railThickness = touch and math.max(3, math.ceil(3 / scale)) or 4
+                local railThickness = touch and math.max(4, math.ceil(4 / scale)) or 4
                 rail.Size = UDim2.new(1, -18, 0, railThickness)
                 hit.Position = UDim2.new(0, 8, 0, height - targetHeight - 4)
                 hit.Size = UDim2.new(1, -16, 0, targetHeight)
                 if not inputOwner then
-                    renderSize = touch and math.ceil(12 / scale) or 12
+                    renderSize = touch and math.ceil(14 / scale) or 12
                     Paint()
                 end
             end
