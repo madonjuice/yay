@@ -1023,10 +1023,12 @@ function VexUI:StartupLoader(config)
         IgnoreGuiInset = true, DisplayOrder = 10000}, UIScreen.Parent)
     make("Frame", {Name = "Backdrop", Size = UDim2.fromScale(1,1), BackgroundColor3 = theme.Background,
         BackgroundTransparency = 0.18, BorderSizePixel = 0, ZIndex = 1}, screen)
+    local viewportSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(800,600)
+    local compact = viewportSize.X < 700
     local card = make("CanvasGroup", {AnchorPoint = Vector2.new(0.5,0.5), Position = UDim2.fromScale(0.5,0.5),
-        Size = UDim2.new(1,-32,0,264), BackgroundColor3 = theme.ElementColor,
+        Size = compact and UDim2.new(1,-24,0,420) or UDim2.new(1,-32,0,310), BackgroundColor3 = theme.ElementColor,
         BackgroundTransparency = 0.02, BorderSizePixel = 0, ZIndex = 2, Visible = setupDone}, screen)
-    make("UISizeConstraint", {MaxSize = Vector2.new(420,264)}, card)
+    make("UISizeConstraint", {MaxSize = compact and Vector2.new(560,420) or Vector2.new(760,310)}, card)
     make("UICorner", {CornerRadius = UDim.new(0,16)}, card)
     make("UIStroke", {Color = theme.Outline, Transparency = 0.22, Thickness = 1}, card)
     make("UIGradient", {Rotation = 90, Color = ColorSequence.new(theme.ElementColor,theme.Background),
@@ -1060,13 +1062,13 @@ function VexUI:StartupLoader(config)
         BackgroundColor3=theme.Outline, BackgroundTransparency=0.35, BorderSizePixel=0, ZIndex=4}, card)
 
     local status = make("TextLabel", {Text="Getting things ready", Position=UDim2.new(0,24,0,95),
-        Size=UDim2.new(1,-48,0,24), BackgroundTransparency=1, Font=Enum.Font.GothamSemibold,
+        Size=compact and UDim2.new(1,-48,0,24) or UDim2.new(0.55,-38,0,24), BackgroundTransparency=1, Font=Enum.Font.GothamSemibold,
         TextSize=16, TextColor3=theme.Text, TextXAlignment=Enum.TextXAlignment.Left, ZIndex=4}, card)
     local detail = make("TextLabel", {Text="Preparing your interface", Position=UDim2.new(0,24,0,122),
-        Size=UDim2.new(1,-48,0,18), BackgroundTransparency=1, Font=Enum.Font.Gotham,
+        Size=compact and UDim2.new(1,-48,0,18) or UDim2.new(0.55,-38,0,18), BackgroundTransparency=1, Font=Enum.Font.Gotham,
         TextSize=11, TextColor3=theme.Muted or theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
         TextTruncate=Enum.TextTruncate.AtEnd, ZIndex=4}, card)
-    local track = make("Frame", {Position=UDim2.new(0,24,0,157), Size=UDim2.new(1,-48,0,6),
+    local track = make("Frame", {Position=UDim2.new(0,24,0,157), Size=compact and UDim2.new(1,-48,0,6) or UDim2.new(0.55,-38,0,6),
         BackgroundColor3=theme.Outline, BackgroundTransparency=0.2, BorderSizePixel=0, ZIndex=4}, card)
     make("UICorner", {CornerRadius=UDim.new(1,0)}, track)
     local fill = make("Frame", {Size=UDim2.fromScale(0,1), BackgroundColor3=theme.Accent,
@@ -1074,7 +1076,7 @@ function VexUI:StartupLoader(config)
     make("UICorner", {CornerRadius=UDim.new(1,0)}, fill)
     make("UIGradient", {Color=ColorSequence.new(theme.Accent,theme.Accent:Lerp(theme.Text,0.22))}, fill)
 
-    local stageRow = make("Frame", {Position=UDim2.new(0,24,0,178), Size=UDim2.new(1,-48,0,34),
+    local stageRow = make("Frame", {Position=UDim2.new(0,24,0,178), Size=compact and UDim2.new(1,-48,0,34) or UDim2.new(0.55,-38,0,34),
         BackgroundTransparency=1, ZIndex=4}, card)
     local stageNames = {"Environment", "UI", "Modules"}
     local stageItems = {}
@@ -1094,12 +1096,66 @@ function VexUI:StartupLoader(config)
         stageItems[index] = {Marker=marker, Name=name, Frame=item}
     end
     local phase = make("TextLabel", {Text="AERO is getting ready", Position=UDim2.new(0,24,0,222),
-        Size=UDim2.new(0.72,-24,0,16), BackgroundTransparency=1, Font=Enum.Font.Gotham,
+        Size=compact and UDim2.new(0.72,-24,0,16) or UDim2.new(0.4,-24,0,16), BackgroundTransparency=1, Font=Enum.Font.Gotham,
         TextSize=10, TextColor3=theme.Muted or theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
         TextTruncate=Enum.TextTruncate.AtEnd, ZIndex=4}, card)
-    local percent = make("TextLabel", {Text="0%", Position=UDim2.new(0.72,0,0,222),
-        Size=UDim2.new(0.28,-24,0,16), BackgroundTransparency=1, Font=Enum.Font.GothamSemibold,
+    local percent = make("TextLabel", {Text="0%", Position=compact and UDim2.new(0.72,0,0,222) or UDim2.new(0.44,0,0,222),
+        Size=compact and UDim2.new(0.28,-24,0,16) or UDim2.new(0.11,-24,0,16), BackgroundTransparency=1, Font=Enum.Font.GothamSemibold,
         TextSize=10, TextColor3=theme.Text, TextXAlignment=Enum.TextXAlignment.Right, ZIndex=4}, card)
+    local changelog = config.Changelog or {}
+    local changelogTitle = make("TextLabel", {Name="ChangelogTitle",
+        Text="WHAT'S NEW", Position=compact and UDim2.new(0,24,0,264) or UDim2.new(0.59,0,0,96),
+        Size=compact and UDim2.new(1,-48,0,18) or UDim2.new(0.36,0,0,18),
+        BackgroundTransparency=1, Font=Enum.Font.GothamSemibold, TextSize=11,
+        TextColor3=theme.Accent, TextXAlignment=Enum.TextXAlignment.Left, ZIndex=4}, card)
+    local uiVersion = changelog.UIVersion or (("v" .. (changelog.UIFrom or "0.0.0.1")) .. " -> " .. (changelog.UITo or ("v" .. (config.Version or "0.0.0.2"))))
+    local scriptVersion = changelog.ScriptVersion or (("v" .. (changelog.ScriptFrom or "0.0.0.1")) .. " -> " .. (changelog.ScriptTo or ("v" .. (config.Version or "0.0.0.2"))))
+    local versions = make("TextLabel", {Name="VersionHistory",
+        Text="UI updated: " .. uiVersion .. "\nScript updated: " .. scriptVersion,
+        Position=compact and UDim2.new(0,24,0,286) or UDim2.new(0.59,0,0,119),
+        Size=compact and UDim2.new(1,-48,0,38) or UDim2.new(0.36,0,0,38),
+        BackgroundTransparency=1, Font=Enum.Font.GothamMedium, TextSize=10,
+        TextColor3=theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
+        TextYAlignment=Enum.TextYAlignment.Top, TextWrapped=true, ZIndex=4}, card)
+    local logItems = changelog.Items or {
+        "Improved mobile layout and touch controls", "Fixed a rare UI zoom issue",
+        "Reduced cleanup CPU spikes", "Improved scrolling and dropdown behavior",
+    }
+    local logLines = {"Changelogs:"}
+    for _, item in ipairs(logItems) do table.insert(logLines, "• " .. tostring(item)) end
+    local logBody = make("TextLabel", {Name="ChangelogEntries", Text=table.concat(logLines,"\n"),
+        Position=compact and UDim2.new(0,24,0,328) or UDim2.new(0.59,0,0,162),
+        Size=compact and UDim2.new(1,-48,0,78) or UDim2.new(0.36,0,0,112),
+        BackgroundTransparency=1, Font=Enum.Font.Gotham, TextSize=compact and 10 or 10,
+        TextColor3=theme.Muted or theme.Text, TextXAlignment=Enum.TextXAlignment.Left,
+        TextYAlignment=Enum.TextYAlignment.Top, TextWrapped=true, ZIndex=4}, card)
+    local function refreshChangelogLanguage()
+        local spanish = VexUI.Language == "es"
+        changelogTitle.Text = spanish and "NOVEDADES" or "WHAT'S NEW"
+        versions.Text = spanish
+            and ("Interfaz: " .. uiVersion .. "\nScript actualizado: " .. scriptVersion)
+            or ("UI updated: " .. uiVersion .. "\nScript updated: " .. scriptVersion)
+        local spanishItems = {
+            ["Improved mobile layout and touch controls"]="Mejoras en el diseño móvil y los controles táctiles",
+            ["Fixed a rare UI zoom issue"]="Se corrigió un problema ocasional de zoom en la interfaz",
+            ["Reduced cleanup CPU spikes"]="Se redujeron los picos de CPU durante la limpieza",
+            ["Improved scrolling and dropdown behavior"]="Mejoras en el desplazamiento y los menús desplegables",
+            ["Updated the loader, tutorial, and theme styling"]="Actualización del cargador, tutorial y temas",
+            ["Improved panel layout and slider usability"]="Mejoras en los paneles y el uso de los controles deslizantes",
+        }
+        local lines = {spanish and "Cambios:" or "Changelogs:"}
+        for _, item in ipairs(logItems) do
+            item = tostring(item)
+            table.insert(lines, "• " .. (spanish and (spanishItems[item] or item) or item))
+        end
+        logBody.Text = table.concat(lines,"\n")
+    end
+    refreshChangelogLanguage()
+    if not compact then
+        make("Frame", {Name="ChangelogDivider", Position=UDim2.new(0.565,0,0,94),
+            Size=UDim2.new(0,1,0,188), BackgroundColor3=theme.Outline,
+            BackgroundTransparency=0.25, BorderSizePixel=0, ZIndex=4}, card)
+    end
     local accentLine = make("Frame", {Position=UDim2.new(0,24,1,-10), Size=UDim2.new(1,-48,0,2),
         BackgroundColor3=theme.Accent, BackgroundTransparency=0.68, BorderSizePixel=0, ZIndex=4}, card)
     make("UICorner", {CornerRadius=UDim.new(1,0)}, accentLine)
@@ -1256,6 +1312,7 @@ function VexUI:StartupLoader(config)
             for _, object in ipairs(card:GetDescendants()) do
                 if object:IsA("TextLabel") or object:IsA("TextButton") then object.Text = VexUI:TranslateText(object.Text) end
             end
+            refreshChangelogLanguage()
         end
         back.Activated:Connect(function()
             if currentPage == 2 and showLanguageStep then setPage(1)
